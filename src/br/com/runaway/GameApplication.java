@@ -26,7 +26,7 @@ public class GameApplication extends Application {
 	@Override
 	public void load() {
 		
-		player = new AnimatedLayer(0, 60, 32, 48, "player/player_walk_strip.png");
+		player = new AnimatedLayer(20, 60, 66, 42, "player/player_walk.png");
 		
 		updateAtFixedRate(30);
 		
