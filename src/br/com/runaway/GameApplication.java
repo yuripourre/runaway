@@ -8,7 +8,6 @@ import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.layer.AnimatedLayer;
-import br.com.etyllica.layer.ImageLayer;
 
 public class GameApplication extends Application {
 
@@ -18,15 +17,21 @@ public class GameApplication extends Application {
 		super(w, h);
 	}
 	
-	private int turnSpeed = 5;
+	private double turnSpeed = 5;
+	private double walkSpeed = 3;
+	private double backWalkSpeed = -1.5;
+	
 	private boolean rightArrow = false;
 	private boolean leftArrow = false;
-	
-	
+	private boolean upArrow = false;
+	private boolean downArrow = false;
+		
 	@Override
 	public void load() {
 		
 		player = new AnimatedLayer(20, 60, 66, 42, "player/player_walk.png");
+		player.setFrames(6);
+		player.setSpeed(100);
 		
 		updateAtFixedRate(30);
 		
@@ -39,6 +44,24 @@ public class GameApplication extends Application {
 		}
 		if(leftArrow) {
 			player.setOffsetAngle(-turnSpeed);
+		}		
+		if(upArrow) {
+			player.animate(now);
+			
+			//go forward
+			player.setX((int)(player.getX() + Math.sin(Math.toRadians(player.getAngle()+90)) * walkSpeed));		
+			
+			player.setY((int)(player.getY() - Math.cos(Math.toRadians(player.getAngle()+90)) * walkSpeed));
+			
+		} else if(downArrow) {
+			
+			player.animate(now);
+			
+			//go backward
+			player.setX((int)(player.getX() + Math.sin(Math.toRadians(player.getAngle()+90)) * backWalkSpeed));		
+			
+			player.setY((int)(player.getY() - Math.cos(Math.toRadians(player.getAngle()+90)) * backWalkSpeed));
+			
 		}
 	}
 
@@ -69,6 +92,18 @@ public class GameApplication extends Application {
 			leftArrow = true;
 		}else if(event.isKeyUp(KeyEvent.TSK_LEFT_ARROW)) {
 			leftArrow = false;
+		}
+		
+		if(event.isKeyDown(KeyEvent.TSK_UP_ARROW)) {
+			upArrow = true;
+		} else if(event.isKeyUp(KeyEvent.TSK_UP_ARROW)) {
+			upArrow = false;
+		}
+		
+		if(event.isKeyDown(KeyEvent.TSK_DOWN_ARROW)) {
+			downArrow = true;
+		} else if(event.isKeyUp(KeyEvent.TSK_DOWN_ARROW)) {
+			downArrow = false;
 		}
 		
 		// TODO Auto-generated method stub
