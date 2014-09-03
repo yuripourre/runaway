@@ -7,6 +7,10 @@ import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.SVGColor;
+import br.com.etyllica.layer.Layer;
+import br.com.etyllica.layer.colision.ColisionDetector;
+import br.com.etyllica.linear.Point2D;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.FirstPlayerController;
@@ -16,6 +20,8 @@ public class GameApplication extends Application {
 	private TopViewPlayer player;
 	
 	private Controller firstPlayerController;
+	
+	private Layer obstacle;
 	
 	public GameApplication(int w, int h) {
 		super(w, h);
@@ -30,6 +36,9 @@ public class GameApplication extends Application {
 		
 		updateAtFixedRate(30);
 		
+		obstacle = new Layer(200,200,100,50);
+		obstacle.setAngle(20);
+		
 		loading = 100;
 	}
 	
@@ -43,6 +52,23 @@ public class GameApplication extends Application {
 		g.fillRect(0, 0, w/2, h);
 		
 		player.draw(g);
+		
+
+		g.setColor(Color.BLACK);
+		for(Point2D point: ColisionDetector.getBounds(player.getHitbox())) {
+			g.fillCircle(point, 5);
+		}
+		for(Point2D point: ColisionDetector.getBounds(obstacle)) {
+			g.fillCircle(point, 5);
+		}
+		
+		if(ColisionDetector.colidePolygon(player.getHitbox(), obstacle)) {
+			g.setColor(SVGColor.SAVAGE_BLUE);
+		} else {
+			g.setColor(SVGColor.CORN_SILK);
+		}
+				
+		g.fillRect(obstacle);
 	}
 	
 	@Override

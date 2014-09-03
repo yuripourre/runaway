@@ -90,6 +90,10 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 	public void onStopWalkBackward() {
 		// TODO Auto-generated method stub
 	}
+	
+	public Layer getHitbox() {
+		return hitbox;
+	}
 
 	@Override
 	public void draw(Graphic g) {
