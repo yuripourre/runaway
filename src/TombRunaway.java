@@ -4,23 +4,25 @@ import br.com.etyllica.context.Application;
 import br.com.runaway.GameApplication;
 
 
-public class Runaway extends EtyllicaFrame {
+public class TombRunaway extends EtyllicaFrame {
 
-	public Runaway() {
+	private static final long serialVersionUID = 1L;
+
+	public TombRunaway() {
 		super(800, 600);
 	}
 	
 	public static void main(String[] args){
-		Runaway map = new Runaway();
+		TombRunaway map = new TombRunaway();
 		map.init();
 	}
 
 	public Application startApplication() {
 		
-		String s = Runaway.class.getResource("").toString();
+		String s = TombRunaway.class.getResource("").toString();
 		setPath(s+"../");
 		
-		return new GameApplication(w, h);
+		return new GameApplication(w, h);		
 	}
 	
 }

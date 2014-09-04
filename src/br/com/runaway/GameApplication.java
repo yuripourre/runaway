@@ -2,6 +2,7 @@ package br.com.runaway;
 
 import java.awt.Color;
 
+import br.com.etyllica.collision.ColisionDetector;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
@@ -9,7 +10,6 @@ import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.graphics.SVGColor;
 import br.com.etyllica.layer.Layer;
-import br.com.etyllica.layer.colision.ColisionDetector;
 import br.com.etyllica.linear.Point2D;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.tide.input.controller.Controller;
