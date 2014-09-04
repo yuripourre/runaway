@@ -38,12 +38,12 @@ public class MapEditor extends MapApplication {
 
 		loading = 30;
 
-		selectionEgyptianMap = new OrthogonalSelectionMap(20, 10, tileWidth, tileHeight);
+		selectionEgyptianMap = new OrthogonalSelectionMap(18, 10, tileWidth, tileHeight);
 		selectionEgyptianMap.translateMap(10, tileSetOffsetY);
 		selectionEgyptianMap.setListener(editor);
 		selectionEgyptianMap.setTileSet(new TileSet(tileWidth, tileHeight, MapType.ORTHOGONAL, "tiles/tileset.png"));
 
-		loading = 70;		
+		loading = 70;
 
 		updateAtFixedRate(80);
 
