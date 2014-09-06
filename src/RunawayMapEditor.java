@@ -1,7 +1,7 @@
 
 import br.com.etyllica.EtyllicaFrame;
 import br.com.etyllica.context.Application;
-import br.com.runaway.MapEditor;
+import br.com.runaway.MapEditorApplication;
 
 
 public class RunawayMapEditor extends EtyllicaFrame {
@@ -22,7 +22,7 @@ public class RunawayMapEditor extends EtyllicaFrame {
 		String s = RunawayMapEditor.class.getResource("").toString();
 		setPath(s+"../");
 		
-		return new MapEditor(w, h);
+		return new MapEditorApplication(w, h);
 	}
 	
 }

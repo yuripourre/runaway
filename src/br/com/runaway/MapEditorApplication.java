@@ -14,7 +14,7 @@ import br.com.vite.map.MapType;
 import br.com.vite.map.selection.OrthogonalSelectionMap;
 import br.com.vite.tile.set.TileSet;
 
-public class MapEditor extends MapApplication {
+public class MapEditorApplication extends MapApplication {
 
 	final int tileWidth = 32;
 	final int tileHeight = 32;
@@ -23,7 +23,7 @@ public class MapEditor extends MapApplication {
 
 	private OrthogonalSelectionMap selectionEgyptianMap;	
 
-	public MapEditor(int w, int h) {
+	public MapEditorApplication(int w, int h) {
 		super(w, h);
 	}
 

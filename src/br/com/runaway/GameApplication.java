@@ -1,6 +1,7 @@
 package br.com.runaway;
 
 import java.awt.Color;
+import java.io.FileNotFoundException;
 
 import br.com.etyllica.collision.ColisionDetector;
 import br.com.etyllica.context.Application;
@@ -17,8 +18,13 @@ import br.com.runaway.player.TopViewPlayer;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
 import br.com.tide.input.controller.FirstPlayerController;
+import br.com.vite.editor.MapEditor;
+import br.com.vite.export.MapExporter;
+import br.com.vite.map.Map;
 
 public class GameApplication extends Application {
+	
+	private MapEditor map;
 	
 	private TopViewPlayer player;
 	
@@ -59,6 +65,13 @@ public class GameApplication extends Application {
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
 		torch2 = new LightSource(player2.getX(), player2.getY(), 120);
+	
+		try {
+			map = MapExporter.load("map1.json");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		loading = 100;
 	}
@@ -80,10 +93,13 @@ public class GameApplication extends Application {
 
 	@Override
 	public void draw(Graphic g) {
-		g.setColor(Color.GREEN);
+		
+		map.draw(g);
+		
+		/*g.setColor(Color.GREEN);
 		g.fillRect(0, 0, w/2, h);
 		g.setColor(Color.BLUE);
-		g.fillRect(w/2, 0, w/2, h);
+		g.fillRect(w/2, 0, w/2, h);*/
 		
 		player.draw(g);
 		player2.draw(g);
