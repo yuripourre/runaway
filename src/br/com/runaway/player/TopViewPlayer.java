@@ -17,15 +17,12 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 	private static final int hitboxWidth = 20;
 
 	public TopViewPlayer(int x, int y) {
-		super();
+		super(x, y);
 		
 		this.listener = this;
 		
-		this.walkSpeed = 3;
+		this.currentSpeed = 3;
 		
-		this.x = x;
-		this.y = y;
-
 		layer = new AnimatedLayer(x, y, 66, 42, "player/player_walk.png");
 		layer.setAngle(angle);
 		layer.setSpeed(100);

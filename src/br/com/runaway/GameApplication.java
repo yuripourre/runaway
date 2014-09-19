@@ -3,7 +3,7 @@ package br.com.runaway;
 import java.awt.Color;
 import java.io.FileNotFoundException;
 
-import br.com.etyllica.collision.ColisionDetector;
+import br.com.etyllica.collision.CollisionDetector;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
@@ -15,12 +15,12 @@ import br.com.etyllica.effects.light.ShadowLayer;
 import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.Point2D;
 import br.com.runaway.player.TopViewPlayer;
+import br.com.runaway.trap.SpikeFloor;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
 import br.com.tide.input.controller.FirstPlayerController;
 import br.com.vite.editor.MapEditor;
 import br.com.vite.export.MapExporter;
-import br.com.vite.map.Map;
 
 public class GameApplication extends Application {
 	
@@ -41,6 +41,8 @@ public class GameApplication extends Application {
 	private LightSource torch1;
 	
 	private LightSource torch2;
+	
+	private SpikeFloor trap;
 	
 	public GameApplication(int w, int h) {
 		super(w, h);
@@ -73,12 +75,16 @@ public class GameApplication extends Application {
 			e.printStackTrace();
 		}
 		
+		trap = new SpikeFloor(w/2, h/2);
+		
 		loading = 100;
 	}
 	
 	public void timeUpdate(long now) {
 		player.update(now);
 		player2.update(now);
+		
+		trap.update(now);
 		
 		int p1x = player.getX()+player.getLayer().getTileW()/2;
 		int p1y = player.getY()+player.getLayer().getTileH()/2;
@@ -96,6 +102,8 @@ public class GameApplication extends Application {
 		
 		map.draw(g);
 		
+		trap.draw(g);
+		
 		/*g.setColor(Color.GREEN);
 		g.fillRect(0, 0, w/2, h);
 		g.setColor(Color.BLUE);
@@ -105,14 +113,14 @@ public class GameApplication extends Application {
 		player2.draw(g);
 		
 		g.setColor(Color.BLACK);
-		for(Point2D point: ColisionDetector.getBounds(player.getHitbox())) {
+		for(Point2D point: CollisionDetector.getBounds(player.getHitbox())) {
 			g.fillCircle(point, 5);
 		}
-		for(Point2D point: ColisionDetector.getBounds(obstacle)) {
+		for(Point2D point: CollisionDetector.getBounds(obstacle)) {
 			g.fillCircle(point, 5);
 		}
 		
-		if(ColisionDetector.colidePolygon(player.getHitbox(), obstacle)) {
+		if(CollisionDetector.colidePolygon(player.getHitbox(), obstacle)) {
 			g.setColor(SVGColor.SAVAGE_BLUE);
 		} else {
 			g.setColor(SVGColor.CORN_SILK);
@@ -120,7 +128,7 @@ public class GameApplication extends Application {
 				
 		g.fillRect(obstacle);
 		
-		shadowMap.drawLights(g, torch1, torch2);
+		//shadowMap.drawLights(g, torch1, torch2);
 	}
 	
 	@Override

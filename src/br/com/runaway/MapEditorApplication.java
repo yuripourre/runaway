@@ -38,10 +38,11 @@ public class MapEditorApplication extends MapApplication {
 
 		loading = 30;
 
-		selectionEgyptianMap = new OrthogonalSelectionMap(18, 10, tileWidth, tileHeight);
+		TileSet egyptianSet = new TileSet(18, 10, tileWidth, tileHeight, MapType.ORTHOGONAL, "tiles/tileset.png");
+		
+		selectionEgyptianMap = new OrthogonalSelectionMap(tileWidth, tileHeight, egyptianSet);
 		selectionEgyptianMap.translateMap(10, tileSetOffsetY);
 		selectionEgyptianMap.setListener(editor);
-		selectionEgyptianMap.setTileSet(new TileSet(tileWidth, tileHeight, MapType.ORTHOGONAL, "tiles/tileset.png"));
 
 		loading = 70;
 
