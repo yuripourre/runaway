@@ -18,6 +18,7 @@ import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.Point2D;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
+import br.com.runaway.ui.LifeBar;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
 import br.com.tide.input.controller.FirstPlayerController;
@@ -28,6 +29,9 @@ public class GameApplication extends Application {
 
 	/*private Camera camera1;
 	private Camera camera2;*/
+	
+	//GUI Stuff
+	private LifeBar lifeBar;
 
 	private MapEditor map;
 
@@ -84,6 +88,8 @@ public class GameApplication extends Application {
 		}
 
 		trap = new SpikeFloor(w/2, h/2);
+		
+		lifeBar = new LifeBar();
 
 		loading = 100;
 	}
@@ -124,6 +130,8 @@ public class GameApplication extends Application {
 		drawScene(g);
 		g.resetCamera(camera2);
 		camera2.draw(g);*/
+		
+		lifeBar.draw(g, 2, 3);
 
 	}
 
