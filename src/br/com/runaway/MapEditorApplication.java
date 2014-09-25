@@ -92,7 +92,7 @@ public class MapEditorApplication extends MapApplication {
 				int offsetX = editor.getOffsetX();
 				int offsetY = editor.getOffsetY();
 
-				editor = MapExporter.load("map.json");
+				editor = MapExporter.load("map2.json");
 				selectionEgyptianMap.setListener(editor);
 
 				editor.translateMap(offsetX, offsetY);

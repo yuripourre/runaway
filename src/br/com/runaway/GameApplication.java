@@ -26,8 +26,8 @@ import br.com.vite.export.MapExporter;
 
 public class GameApplication extends Application {
 
-	private Camera camera1;
-	private Camera camera2;
+	/*private Camera camera1;
+	private Camera camera2;*/
 
 	private MapEditor map;
 
@@ -56,8 +56,8 @@ public class GameApplication extends Application {
 	@Override
 	public void load() {
 
-		camera1 = new Camera(0, 0, w/2, h);
-		camera2 = new Camera(w/2, 0, w/2, h);
+		//camera1 = new Camera(0, 0, w/2, h);
+		//camera2 = new Camera(w/2, 0, w/2, h);
 		
 		player = new TopViewPlayer(w/4, h/2);
 
@@ -111,8 +111,10 @@ public class GameApplication extends Application {
 	@Override
 	public void draw(Graphic g) {
 
+		drawScene(g);
+		
 		//Draw First Player Camera
-		g.setCamera(camera1);
+		/*g.setCamera(camera1);
 		drawScene(g);
 		g.resetCamera(camera1);
 		camera1.draw(g);
@@ -121,7 +123,7 @@ public class GameApplication extends Application {
 		g.setCamera(camera2);
 		drawScene(g);
 		g.resetCamera(camera2);
-		camera2.draw(g);
+		camera2.draw(g);*/
 
 	}
 
