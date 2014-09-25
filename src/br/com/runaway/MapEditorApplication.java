@@ -11,7 +11,7 @@ import br.com.vite.MapApplication;
 import br.com.vite.editor.OrthogonalMapEditor;
 import br.com.vite.export.MapExporter;
 import br.com.vite.map.MapType;
-import br.com.vite.map.selection.OrthogonalSelectionMap;
+import br.com.vite.map.selection.OrthogonalFloorSelection;
 import br.com.vite.tile.set.TileSet;
 
 public class MapEditorApplication extends MapApplication {
@@ -21,7 +21,7 @@ public class MapEditorApplication extends MapApplication {
 
 	private int tileSetOffsetY = 440;
 
-	private OrthogonalSelectionMap selectionEgyptianMap;	
+	private OrthogonalFloorSelection selectionEgyptianMap;	
 
 	public MapEditorApplication(int w, int h) {
 		super(w, h);
@@ -40,7 +40,7 @@ public class MapEditorApplication extends MapApplication {
 
 		TileSet egyptianSet = new TileSet(18, 10, tileWidth, tileHeight, MapType.ORTHOGONAL, "tiles/tileset.png");
 		
-		selectionEgyptianMap = new OrthogonalSelectionMap(tileWidth, tileHeight, egyptianSet);
+		selectionEgyptianMap = new OrthogonalFloorSelection(tileWidth, tileHeight, egyptianSet);
 		selectionEgyptianMap.translateMap(10, tileSetOffsetY);
 		selectionEgyptianMap.setListener(editor);
 
