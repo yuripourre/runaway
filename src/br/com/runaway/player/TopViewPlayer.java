@@ -49,42 +49,42 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 	}
 
 	@Override
-	public void onTurnLeft() {
+	public void onTurnLeft(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onTurnRight() {
+	public void onTurnRight(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onWalkForward() {
+	public void onWalkForward(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onWalkBackward() {
+	public void onWalkBackward(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onStopTurnLeft() {
+	public void onStopTurnLeft(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onStopTurnRight() {
+	public void onStopTurnRight(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onStopWalkForward() {
+	public void onStopWalkForward(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void onStopWalkBackward() {
+	public void onStopWalkBackward(ActionPlayer player) {
 		// TODO Auto-generated method stub
 	}
 	
