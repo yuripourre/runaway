@@ -3,6 +3,7 @@ package br.com.runaway.ui;
 import java.awt.Color;
 
 import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.SVGColor;
 
 public class LifeBar {
 
@@ -19,7 +20,7 @@ public class LifeBar {
 		for(int i = 0; i < totalLifes; i++) {
 
 			if(i < currentLife) {
-				g.setColor(Color.RED);
+				g.setColor(SVGColor.CRIMSON);
 				g.fillCircle(offsetX+i*(2*radius+spacing), offsetY, radius);
 			}
 			
