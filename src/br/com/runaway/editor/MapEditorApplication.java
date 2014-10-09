@@ -1,4 +1,4 @@
-package br.com.runaway;
+package br.com.runaway.editor;
 
 
 import java.io.FileNotFoundException;
@@ -7,6 +7,7 @@ import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
+import br.com.runaway.editor.item.Key;
 import br.com.vite.MapApplication;
 import br.com.vite.editor.OrthogonalMapEditor;
 import br.com.vite.export.MapExporter;
@@ -21,7 +22,10 @@ public class MapEditorApplication extends MapApplication {
 
 	private int tileSetOffsetY = 440;
 
-	private OrthogonalFloorSelection selectionEgyptianMap;	
+	private OrthogonalFloorSelection selectionEgyptianMap;
+	
+	//Itens
+	private Key key;
 
 	public MapEditorApplication(int w, int h) {
 		super(w, h);
@@ -45,6 +49,12 @@ public class MapEditorApplication extends MapApplication {
 		selectionEgyptianMap.setListener(editor);
 
 		loading = 70;
+		
+		key = new Key();
+		
+		selectedObject = key;
+		
+		loading = 80;
 
 		updateAtFixedRate(80);
 
@@ -54,8 +64,6 @@ public class MapEditorApplication extends MapApplication {
 	@Override
 	public void timeUpdate(long now) {
 		super.timeUpdate(now);
-
-		selectionEgyptianMap.update(now);
 
 		selectionEgyptianMap.update(now);
 	}
