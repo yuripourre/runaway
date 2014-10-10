@@ -7,7 +7,7 @@ public class Key extends ImageTileObject {
 	public Key() {
 		super("item/key.png");
 		
-		offsetX = 2;
+		offsetX = 18;
 		offsetY = -10;
 		
 		this.label = "KEY";
