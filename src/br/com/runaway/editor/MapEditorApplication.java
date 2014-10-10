@@ -52,7 +52,7 @@ public class MapEditorApplication extends MapApplication {
 		
 		key = new Key();
 		
-		selectedObject = key;
+		editor.setObjectTile(key);
 		
 		loading = 80;
 
