@@ -30,7 +30,6 @@ public class GameApplication extends Application {
 	/*private Camera camera1;
 	private Camera camera2;*/
 	
-	/* teste de versionamento*/
 	//GUI Stuff
 	private LifeBar lifeBar;
 
