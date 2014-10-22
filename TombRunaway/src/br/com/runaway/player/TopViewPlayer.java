@@ -1,5 +1,7 @@
 package br.com.runaway.player;
 
+import java.awt.Color;
+
 import br.com.etyllica.core.Drawable;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.graphics.SVGColor;
@@ -9,20 +11,22 @@ import br.com.etyllica.linear.PointInt2D;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
-public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlayerListener {
+public class TopViewPlayer extends ActionPlayer implements Drawable {
 
 	private AnimatedLayer layer;
 	
 	private Layer hitbox;
 	
-	private PointInt2D centerPoint;
-			
+	private PointInt2D center;
+				
 	private static final int HITBOX_WIDTH = 28;
+	
+	private Color color = SVGColor.DARK_GOLDENROD;
 
-	public TopViewPlayer(int x, int y) {
+	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
 		super(x, y);
 		
-		this.listener = this;
+		this.listener = listener;
 		
 		this.currentSpeed = 3;
 		
@@ -32,7 +36,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 		layer.setFrames(6);
 
 		hitbox = new Layer();
-		centerPoint = new PointInt2D();
+		center = new PointInt2D();
 		//hitbox.centralize(layer);
 		centralizeHitbox();
 	}
@@ -54,53 +58,13 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 	}
 	
 	private void centralizeHitbox() {
+				
+		int cx = layer.getX()+layer.getTileW()/2;
+		int cy = layer.getY()+layer.getTileH()/2;
 		
-		int cx = layer.getX()+layer.getTileW()/2-HITBOX_WIDTH/2;
-		int cy = layer.getY()+layer.getTileH()/2-HITBOX_WIDTH/2;
+		center.setLocation(cx, cy);
 		
-		centerPoint.setLocation(cx, cy);
-		
-		hitbox.setBounds(cx, cy, HITBOX_WIDTH, HITBOX_WIDTH);
-	}
-
-	@Override
-	public void onTurnLeft(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onTurnRight(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onWalkForward(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onWalkBackward(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopTurnLeft(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopTurnRight(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopWalkForward(ActionPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopWalkBackward(ActionPlayer player) {
-		// TODO Auto-generated method stub
+		hitbox.setBounds(cx-HITBOX_WIDTH/2, cy-HITBOX_WIDTH/2, HITBOX_WIDTH, HITBOX_WIDTH);
 	}
 	
 	public Layer getHitbox() {
@@ -123,4 +87,16 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 		return layer;
 	}
 
+	public PointInt2D getCenter() {
+		return center;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public void resetColor() {
+		this.color = SVGColor.DARK_GOLDENROD;
+	}		
+	
 }

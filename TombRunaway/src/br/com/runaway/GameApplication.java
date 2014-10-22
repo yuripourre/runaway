@@ -1,10 +1,8 @@
 package br.com.runaway;
 
 import java.awt.Color;
-import java.awt.geom.AffineTransform;
 import java.io.FileNotFoundException;
 
-import br.com.etyllica.cinematics.Camera;
 import br.com.etyllica.collision.CollisionDetector;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
@@ -19,13 +17,16 @@ import br.com.etyllica.linear.Point2D;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.ui.LifeBar;
+import br.com.tide.action.player.ActionPlayerListener;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
 import br.com.tide.input.controller.FirstPlayerController;
 import br.com.vite.editor.MapEditor;
 import br.com.vite.export.MapExporter;
+import br.com.vite.map.Map;
+import br.com.vite.tile.Tile;
 
-public class GameApplication extends Application {
+public class GameApplication extends Application implements ActionPlayerListener<TopViewPlayer> {
 
 	/*private Camera camera1;
 	private Camera camera2;*/
@@ -37,10 +38,6 @@ public class GameApplication extends Application {
 
 	private TopViewPlayer player;
 
-	private TopViewPlayer player2;
-
-	private Controller firstPlayerController;
-
 	private Controller secondPlayerController;
 
 	private Layer obstacle;
@@ -49,9 +46,9 @@ public class GameApplication extends Application {
 
 	private LightSource torch1;
 
-	private LightSource torch2;
-
 	private SpikeFloor trap;
+	
+	private boolean handleCollision = false;
 
 	public GameApplication(int w, int h) {
 		super(w, h);
@@ -63,13 +60,12 @@ public class GameApplication extends Application {
 		//camera1 = new Camera(0, 0, w/2, h);
 		//camera2 = new Camera(w/2, 0, w/2, h);
 		
-		player = new TopViewPlayer(w/4, h/2);
+		//player = new TopViewPlayer(w/4, h/2, this);
+		//firstPlayerController = new FirstPlayerController(player);
 
-		player2 = new TopViewPlayer(w/4+20, h/2+80);
+		player = new TopViewPlayer(w/4+20, h/2+80, this);
 
-		firstPlayerController = new FirstPlayerController(player);
-
-		secondPlayerController = new EasyController(player2);
+		secondPlayerController = new EasyController(player);
 
 		updateAtFixedRate(30);
 
@@ -78,7 +74,6 @@ public class GameApplication extends Application {
 
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
-		torch2 = new LightSource(player2.getX(), player2.getY(), 120);
 
 		try {
 			map = MapExporter.load("map1.json");
@@ -96,7 +91,6 @@ public class GameApplication extends Application {
 
 	public void timeUpdate(long now) {
 		player.update(now);
-		player2.update(now);
 
 		trap.update(now);
 
@@ -104,33 +98,29 @@ public class GameApplication extends Application {
 		int p1y = player.getY()+player.getLayer().getTileH()/2;
 
 		torch1.setCoordinates(p1x-torch1.getW()/2, p1y-torch1.getH()/2);
-
-		int p2x = player2.getX()+player2.getLayer().getTileW()/2;
-		int p2y = player2.getY()+player2.getLayer().getTileH()/2;
-
-		torch2.setCoordinates(p2x-torch2.getW()/2, p2y-torch2.getH()/2);
 		
-		//camera1.setAimLocation(player.getX(), 0);
-		//camera2.setAimLocation(player2.getX(), 0);
+		if(handleCollision)
+			updateCollision();
+		
+	}
+	
+	private void updateCollision() {
+		Map m = map.getMap();
+		
+		Tile tile = m.updateTarget(player.getCenter().getX(), player.getCenter().getY());
+		
+		if(m.isBlock(tile)) {
+			player.setColor(Color.RED);
+		} else {
+			player.resetColor();
+		}
 	}
 
 	@Override
 	public void draw(Graphic g) {
 
 		drawScene(g);
-		
-		//Draw First Player Camera
-		/*g.setCamera(camera1);
-		drawScene(g);
-		g.resetCamera(camera1);
-		camera1.draw(g);
-
-		//Draw Second Player Camera
-		g.setCamera(camera2);
-		drawScene(g);
-		g.resetCamera(camera2);
-		camera2.draw(g);*/
-		
+				
 		lifeBar.draw(g, 2, 3);
 
 	}
@@ -140,13 +130,7 @@ public class GameApplication extends Application {
 
 		trap.draw(g);
 
-		/*g.setColor(Color.GREEN);
-		g.fillRect(0, 0, w/2, h);
-		g.setColor(Color.BLUE);
-		g.fillRect(w/2, 0, w/2, h);*/
-
 		player.draw(g);
-		player2.draw(g);
 
 		g.setColor(Color.BLACK);
 		for(Point2D point: CollisionDetector.getBounds(player.getHitbox())) {
@@ -164,7 +148,7 @@ public class GameApplication extends Application {
 
 		g.fillRect(obstacle);
 
-		//shadowMap.drawLights(g, torch1, torch2);
+		//shadowMap.drawLights(g, torch1);
 	}
 
 	@Override
@@ -176,11 +160,49 @@ public class GameApplication extends Application {
 	@Override
 	public GUIEvent updateKeyboard(KeyEvent event) {
 
-		firstPlayerController.handleEvent(event);
 		secondPlayerController.handleEvent(event);
 
 		return null;
 	}
+		
+	@Override
+	public void onWalkForward(TopViewPlayer player) {
+		handleCollision = true;
+	}
 
+	@Override
+	public void onWalkBackward(TopViewPlayer player) {
+		handleCollision = true;
+	}
+
+	@Override
+	public void onStopWalkForward(TopViewPlayer player) {
+		handleCollision = false;
+	}
+
+	@Override
+	public void onStopWalkBackward(TopViewPlayer player) {
+		handleCollision = false;
+	}
+	
+	@Override
+	public void onTurnLeft(TopViewPlayer player) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onTurnRight(TopViewPlayer player) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onStopTurnLeft(TopViewPlayer player) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onStopTurnRight(TopViewPlayer player) {
+		// TODO Auto-generated method stub
+	}
 
 }
