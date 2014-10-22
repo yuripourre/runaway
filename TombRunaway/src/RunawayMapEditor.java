@@ -1,7 +1,7 @@
 
 import br.com.etyllica.EtyllicaFrame;
 import br.com.etyllica.context.Application;
-import br.com.runaway.MapEditorApplication;
+import br.com.runaway.editor.MapEditorApplication;
 
 
 public class RunawayMapEditor extends EtyllicaFrame {
