@@ -2,6 +2,7 @@
 import br.com.etyllica.EtyllicaFrame;
 import br.com.etyllica.context.Application;
 import br.com.runaway.GameApplication;
+import br.com.runaway.menu.MainMenu;
 
 
 public class TombRunaway extends EtyllicaFrame {
@@ -22,7 +23,7 @@ public class TombRunaway extends EtyllicaFrame {
 		String s = TombRunaway.class.getResource("").toString();
 		setPath(s+"../");
 		
-		return new GameApplication(w, h);		
+		return new MainMenu(w, h);		
 	}
 	
 }
