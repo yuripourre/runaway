@@ -9,6 +9,10 @@
     {
       "id": 0,
       "path": "tiles/tileset.png"
+    },
+    {
+      "id": 8,
+      "path": "item/key.png"
     }
   ],
   "tiles": [

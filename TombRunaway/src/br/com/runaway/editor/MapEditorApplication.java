@@ -213,6 +213,7 @@ public class MapEditorApplication extends MapApplication {
 
 				editor = MapExporter.load(path);
 				selectionEgyptianMap.setListener(editor);
+				editor.setObjectTile(key);
 
 				editor.translateMap(offsetX, offsetY);
 
