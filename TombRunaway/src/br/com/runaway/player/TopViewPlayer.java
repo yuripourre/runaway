@@ -5,6 +5,7 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.graphics.SVGColor;
 import br.com.etyllica.layer.AnimatedLayer;
 import br.com.etyllica.layer.Layer;
+import br.com.etyllica.linear.PointInt2D;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
@@ -13,8 +14,10 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 	private AnimatedLayer layer;
 	
 	private Layer hitbox;
-		
-	private static final int hitboxWidth = 20;
+	
+	private PointInt2D centerPoint;
+			
+	private static final int HITBOX_WIDTH = 28;
 
 	public TopViewPlayer(int x, int y) {
 		super(x, y);
@@ -28,7 +31,10 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 		layer.setSpeed(100);
 		layer.setFrames(6);
 
-		hitbox = new Layer(layer.getX()+layer.getTileW()/2-hitboxWidth/2, y, hitboxWidth, layer.getTileH());				
+		hitbox = new Layer();
+		centerPoint = new PointInt2D();
+		//hitbox.centralize(layer);
+		centralizeHitbox();
 	}
 
 	public void update(long now) {
@@ -37,15 +43,24 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, ActionPlaye
 		if(isWalking()) {
 			layer.animate(now);
 			layer.setCoordinates(x, y);
-			
-			hitbox.setBounds(layer.getX()+layer.getTileW()/2-hitboxWidth/2, y, hitboxWidth, layer.getTileH());
+		
+			centralizeHitbox();
 		}
 		
 		if(isTurning()) {
 			layer.setAngle(angle);
-			hitbox.setAngle(angle);
 		}
 
+	}
+	
+	private void centralizeHitbox() {
+		
+		int cx = layer.getX()+layer.getTileW()/2-HITBOX_WIDTH/2;
+		int cy = layer.getY()+layer.getTileH()/2-HITBOX_WIDTH/2;
+		
+		centerPoint.setLocation(cx, cy);
+		
+		hitbox.setBounds(cx, cy, HITBOX_WIDTH, HITBOX_WIDTH);
 	}
 
 	@Override
