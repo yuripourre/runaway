@@ -75,7 +75,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable {
 	public void draw(Graphic g) {
 				
 		//Draw HitBox
-		g.setColor(SVGColor.DARK_GOLDENROD);
+		g.setColor(color);
 		g.setAlpha(80);
 		g.fillRect(hitbox);
 		g.resetOpacity();
