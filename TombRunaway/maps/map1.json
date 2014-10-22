@@ -28,14 +28,14 @@
       "set": 0,
       "xImage": 320,
       "yImage": 160,
-      "collision": "FREE"
+      "collision": "BLOCK"
     },
     {
       "id": 2,
       "set": 0,
       "xImage": 128,
       "yImage": 160,
-      "collision": "FREE"
+      "collision": "BLOCK"
     },
     {
       "id": 3,
@@ -49,21 +49,21 @@
       "set": 0,
       "xImage": 32,
       "yImage": 0,
-      "collision": "FREE"
+      "collision": "BLOCK"
     },
     {
       "id": 0,
       "set": 0,
       "xImage": 384,
       "yImage": 160,
-      "collision": "FREE"
+      "collision": "BLOCK"
     },
     {
       "id": 4,
       "set": 0,
       "xImage": 512,
       "yImage": 0,
-      "collision": "FREE"
+      "collision": "BLOCK"
     },
     {
       "id": 1,
