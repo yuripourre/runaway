@@ -1,7 +1,5 @@
 package br.com.runaway.collision;
 
-import java.awt.Color;
-
 import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.player.TopViewPlayer;
@@ -37,43 +35,59 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 
 		Tile tile = map.getTile(cx, cy, targetTile);
 
-		if(map.isBlock(tile)) {
+		/*if(map.isBlock(tile)) {
 			player.setColor(Color.RED);
 		} else {
 			player.resetColor();
-		}
+		}*/
+				
+		handleVerticalCollision(player);
+		
+		handleHorizontalCollision(player);
+	}
+	
+	private void handleVerticalCollision(TopViewPlayer player) {
+		
+		int cy = player.getCenter().getY();
+		
+		int ydif = cy%map.getTileHeight();  
 
-		//If collide upper tile
-		if(cy%map.getTileHeight()<map.getTileHeight()/2) {
-
+		if(ydif < map.getTileHeight()/2) {
+			
 			if(map.isBlock(getUpperTile(targetTile))) {
-				player.setColor(Color.GREEN);
+				player.setY(player.getY() + map.getTileHeight()/2 - ydif);
+			}
+			
+		} else if(ydif > map.getTileHeight()/2) {
+			
+			if(map.isBlock(getLowerTile(targetTile))) {
+				player.setY(player.getY() - (ydif - map.getTileHeight()/2));
+			}
+			
+		}
+		
+	}
+	
+	private void handleHorizontalCollision(TopViewPlayer player) {
+	
+		int cx = player.getCenter().getX();
+		
+		int xdif = cx%map.getTileWidth();
+		
+		if(xdif < map.getTileWidth()/2) {
+
+			if(map.isBlock(getLeftTile(targetTile))) {
+				player.setX(player.getX() + map.getTileWidth()/2 - xdif);
 			}
 
-			//If collide lower tile
-		} else if(cy%map.getTileHeight()>map.getTileHeight()/2) {
+		} else if(xdif > map.getTileWidth()/2) {
 
-			if(map.isBlock(getLowerTile(targetTile))) {
-				player.setColor(Color.BLUE);
+			if(map.isBlock(getRightTile(targetTile))) {
+				player.setX(player.getX() - (xdif - map.getTileWidth()/2));
 			}
 
 		}
 		
-		//Horizontal collision
-		if(cx%map.getTileWidth()<map.getTileWidth()/2) {
-
-			if(map.isBlock(getLeftTile(targetTile))) {
-				player.setColor(Color.ORANGE);
-			}
-
-			//If collide lower tile
-		} else if(cx%map.getTileWidth()>map.getTileWidth()/2) {
-
-			if(map.isBlock(getRightTile(targetTile))) {
-				player.setColor(Color.MAGENTA);
-			}
-
-		}
 	}
 
 	private void updateHitPoints(TopViewPlayer player) {
