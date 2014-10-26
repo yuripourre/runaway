@@ -14,6 +14,8 @@ import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
 import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.Point2D;
+import br.com.etyllica.linear.PointInt2D;
+import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.ui.LifeBar;
@@ -26,7 +28,7 @@ import br.com.vite.export.MapExporter;
 import br.com.vite.map.Map;
 import br.com.vite.tile.Tile;
 
-public class GameApplication extends Application implements ActionPlayerListener<TopViewPlayer> {
+public class GameApplication extends Application {
 
 	/*private Camera camera1;
 	private Camera camera2;*/
@@ -47,9 +49,9 @@ public class GameApplication extends Application implements ActionPlayerListener
 	private LightSource torch1;
 
 	private SpikeFloor trap;
-	
-	private boolean handleCollision = false;
-
+		
+	private CollisionHandler handler;
+		
 	public GameApplication(int w, int h) {
 		super(w, h);
 	}
@@ -63,7 +65,17 @@ public class GameApplication extends Application implements ActionPlayerListener
 		//player = new TopViewPlayer(w/4, h/2, this);
 		//firstPlayerController = new FirstPlayerController(player);
 
-		player = new TopViewPlayer(w/4+20, h/2+80, this);
+
+		try {
+			map = MapExporter.load("map1.json");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		handler = new CollisionHandler(map.getMap());
+
+		player = new TopViewPlayer(w/4+20, h/2+80, handler);
 
 		secondPlayerController = new EasyController(player);
 
@@ -74,13 +86,6 @@ public class GameApplication extends Application implements ActionPlayerListener
 
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
-
-		try {
-			map = MapExporter.load("map1.json");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		trap = new SpikeFloor(w/2, h/2);
 		
@@ -99,23 +104,10 @@ public class GameApplication extends Application implements ActionPlayerListener
 
 		torch1.setCoordinates(p1x-torch1.getW()/2, p1y-torch1.getH()/2);
 		
-		if(handleCollision)
-			updateCollision();
+		handler.updateCollision(player);
 		
 	}
 	
-	private void updateCollision() {
-		Map m = map.getMap();
-		
-		Tile tile = m.updateTarget(player.getCenter().getX(), player.getCenter().getY());
-		
-		if(m.isBlock(tile)) {
-			player.setColor(Color.RED);
-		} else {
-			player.resetColor();
-		}
-	}
-
 	@Override
 	public void draw(Graphic g) {
 
@@ -140,11 +132,6 @@ public class GameApplication extends Application implements ActionPlayerListener
 			g.fillCircle(point, 5);
 		}
 
-		if(CollisionDetector.colidePolygon(player.getHitbox(), obstacle)) {
-			g.setColor(SVGColor.SAVAGE_BLUE);
-		} else {
-			g.setColor(SVGColor.CORN_SILK);
-		}
 
 		g.fillRect(obstacle);
 
@@ -165,44 +152,6 @@ public class GameApplication extends Application implements ActionPlayerListener
 		return null;
 	}
 		
-	@Override
-	public void onWalkForward(TopViewPlayer player) {
-		handleCollision = true;
-	}
-
-	@Override
-	public void onWalkBackward(TopViewPlayer player) {
-		handleCollision = true;
-	}
-
-	@Override
-	public void onStopWalkForward(TopViewPlayer player) {
-		handleCollision = false;
-	}
-
-	@Override
-	public void onStopWalkBackward(TopViewPlayer player) {
-		handleCollision = false;
-	}
 	
-	@Override
-	public void onTurnLeft(TopViewPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onTurnRight(TopViewPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopTurnLeft(TopViewPlayer player) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onStopTurnRight(TopViewPlayer player) {
-		// TODO Auto-generated method stub
-	}
 
 }
