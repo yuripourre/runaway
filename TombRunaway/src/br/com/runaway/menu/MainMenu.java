@@ -23,7 +23,7 @@ public class MainMenu extends Application {
 	public void doOpenGame() {
 
 		//Always start from first level
-		session.put(GameApplication.PARAM_LEVEL, 8);
+		session.put(GameApplication.PARAM_LEVEL, 2);
 		nextApplication = new GameApplication(w, h);
 	}
 

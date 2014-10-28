@@ -19,6 +19,7 @@ import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.animation.HitAnimation;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
+import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
@@ -34,7 +35,7 @@ import br.com.vite.tile.layer.ImageTileObject;
 public class GameApplication extends Application {
 
 	public static final int MAX_LEVEL = 10;
-	
+
 	public static final String PARAM_LEVEL = "level";
 
 	//GUI Stuff
@@ -48,7 +49,7 @@ public class GameApplication extends Application {
 
 	private ShadowLayer shadowMap;
 
-	private LightSource torch1;
+	private LightSource torch;
 
 	private List<Trap> traps;
 
@@ -69,14 +70,14 @@ public class GameApplication extends Application {
 
 		handler = new CollisionHandler(map.getMap());
 
-		player = new TopViewPlayer(w/4+264, h/2-50, handler);
+		player = new TopViewPlayer(32, 32, handler);
 
 		secondPlayerController = new EasyController(player);
 
 		updateAtFixedRate(30);
 
 		shadowMap = new ShadowLayer(x, y, w, h);
-		torch1 = new LightSource(player.getX(), player.getY(), 120);
+		torch = new LightSource(player.getX(), player.getY(), 120);
 
 		invincible = new HitAnimation(player);
 
@@ -128,6 +129,21 @@ public class GameApplication extends Application {
 	public void timeUpdate(long now) {
 		player.update(now);
 
+		checkTrapCollisions(now);
+
+		checkKeyCollision(now);
+
+		int p1x = player.getX()+player.getLayer().getTileW()/2;
+		int p1y = player.getY()+player.getLayer().getTileH()/2;
+
+		torch.setCoordinates(p1x-torch.getW()/2, p1y-torch.getH()/2);
+
+		handler.updateCollision(player);
+
+	}
+
+	private void checkTrapCollisions(long now) {
+
 		PointInt2D center = player.getCenter();
 
 		for(Trap trap : traps) {
@@ -139,19 +155,18 @@ public class GameApplication extends Application {
 					trapCollision(now);
 				}
 			}
-		}
+		}		
+	}
 
+	private void checkKeyCollision(long now) {
+		if(key == null)
+			return;
+
+		PointInt2D center = player.getCenter();
+		
 		if(key.colideCirclePoint(center.getX(), center.getY())) {
 			nextLevel();
 		}
-
-		int p1x = player.getX()+player.getLayer().getTileW()/2;
-		int p1y = player.getY()+player.getLayer().getTileH()/2;
-
-		torch1.setCoordinates(p1x-torch1.getW()/2, p1y-torch1.getH()/2);
-
-		handler.updateCollision(player);
-
 	}
 
 	private void trapCollision(long now) {
@@ -159,7 +174,7 @@ public class GameApplication extends Application {
 		player.setInvincibility(true);				
 		invincible.startAnimation(now);
 
-		if(player.getCurrentLife()<0)
+		if(player.getCurrentLife() < 0)
 			nextApplication = new GameOver(w, h);
 	}
 
@@ -171,12 +186,10 @@ public class GameApplication extends Application {
 			session.put(PARAM_LEVEL, level+1);
 
 			nextApplication = new GameApplication(w, h);
-			
+
 		} else {
-			nextApplication = new GameApplication(w, h);	
+			nextApplication = new Congratulations(w, h);	
 		}
-		
-		
 	}
 
 	@Override
@@ -199,12 +212,7 @@ public class GameApplication extends Application {
 
 		player.draw(g);
 
-		g.setColor(Color.BLACK);
-		for(Point2D point: CollisionDetector.getBounds(player.getHitbox())) {
-			g.fillCircle(point, 5);
-		}
-
-		//shadowMap.drawLights(g, torch1);
+		shadowMap.drawLights(g, torch);
 	}
 
 	@Override

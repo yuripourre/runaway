@@ -26,6 +26,8 @@ public class LifeBar {
 		
 		int spacing = 5;
 		
+		g.setAlpha(95);
+		
 		for(int i = 0; i < player.getTotalLife(); i++) {
 
 			if(i < player.getCurrentLife()) {
@@ -37,6 +39,8 @@ public class LifeBar {
 			g.drawCircle(offsetX+i*(2*radius+spacing), offsetY, radius);
 			
 		}
+		
+		g.resetOpacity();
 
 	}
 

@@ -15,28 +15,28 @@ import br.com.tide.action.player.ActionPlayerListener;
 public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimationFinishListener {
 
 	private AnimatedLayer layer;
-	
+
 	private Layer hitbox;
-	
+
 	private PointInt2D center;
-				
+
 	private static final int HITBOX_WIDTH = 28;
-	
+
 	private Color color = SVGColor.DARK_GOLDENROD;
-	
+
 	private int currentLife = 3;
-	
+
 	private int totalLife = 3;
-	
+
 	private boolean invincibility = false;
 
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
 		super(x, y);
-		
+
 		this.listener = listener;
-		
+
 		this.currentSpeed = 3;
-		
+
 		layer = new AnimatedLayer(x, y, 66, 42, "player/player_walk.png");
 		layer.setAngle(angle);
 		layer.setSpeed(100);
@@ -54,42 +54,47 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 		if(isWalking()) {
 			layer.animate(now);
 			layer.setCoordinates(x, y);
-		
+
 			centralizeHitbox();
 		}
-		
+
 		if(isTurning()) {
 			layer.setAngle(angle);
 		}
 
 	}
-	
+
 	private void centralizeHitbox() {
-				
+
 		int cx = layer.getX()+layer.getTileW()/2;
 		int cy = layer.getY()+layer.getTileH()/2;
-		
+
 		center.setLocation(cx, cy);
-		
+
 		hitbox.setBounds(cx-HITBOX_WIDTH/2, cy-HITBOX_WIDTH/2, HITBOX_WIDTH, HITBOX_WIDTH);
 	}
-	
+
 	public Layer getHitbox() {
 		return hitbox;
 	}
 
 	@Override
 	public void draw(Graphic g) {
-				
+
+		//drawHitBox(g);
+
+		layer.draw(g);
+	}
+
+	private void drawHitBox(Graphic g) {
+
 		//Draw HitBox
 		g.setColor(color);
 		g.setAlpha(80);
 		g.fillRect(hitbox);
 		g.resetOpacity();
-		
-		layer.draw(g);
 	}
-	
+
 	public AnimatedLayer getLayer() {
 		return layer;
 	}
@@ -97,7 +102,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	public PointInt2D getCenter() {
 		return center;
 	}
-	
+
 	public boolean isInvincibility() {
 		return invincibility;
 	}
@@ -105,11 +110,11 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	public void setInvincibility(boolean invincibility) {
 		this.invincibility = invincibility;
 	}
-	
+
 	public void loseLife() {
 		currentLife--;
 	}
-	
+
 	public int getCurrentLife() {
 		return currentLife;
 	}
@@ -121,7 +126,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
+
 	public void resetColor() {
 		this.color = SVGColor.DARK_GOLDENROD;
 	}
@@ -130,5 +135,5 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	public void onAnimationFinish(long now) {
 		setInvincibility(false);
 	}
-	
+
 }
