@@ -1,12 +1,9 @@
 package br.com.runaway;
 
-import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.etyllica.animation.scripts.OpacityAnimation;
-import br.com.etyllica.collision.CollisionDetector;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
@@ -14,7 +11,6 @@ import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
-import br.com.etyllica.linear.Point2D;
 import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.animation.HitAnimation;
 import br.com.runaway.collision.CollisionHandler;
@@ -97,9 +93,16 @@ public class GameApplication extends Application {
 			e.printStackTrace();
 		}
 
-		/*map.getMap().getDrawer().setDrawCollision(false);
-		map.getMap().getDrawer().setDrawGrid(false);*/
-
+		map.disableGridShow();
+		map.disableCollisionShow();
+		map.disableCurrentTileShow();
+		
+		loadObjects(map);
+		
+	}
+	
+	private void loadObjects(MapEditor map) {
+		
 		traps = new ArrayList<Trap>();
 
 		Tile[][] tiles = map.getTiles();
