@@ -13,7 +13,7 @@ public class SpikeFloor extends Trap {
 		super();
 		setBounds(x, y, 32, 32);
 		
-		layer = new ImageLayer(x, y, 32, 38, "traps/spike.png");
+		layer = new ImageLayer(x, y-6, 32, 38, "traps/spike.png");
 	}
 
 	@Override

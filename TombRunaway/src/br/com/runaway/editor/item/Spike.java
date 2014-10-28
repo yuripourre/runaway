@@ -7,7 +7,8 @@ public class Spike extends ImageTileObject {
 	public Spike() {
 		super("item/spike.png");
 		
-		offsetY = -6;
+		offsetX = 16;
+		offsetY = -2;
 		
 		this.label = "SPIKE";
 	}

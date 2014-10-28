@@ -2,6 +2,8 @@ package br.com.runaway;
 
 import java.awt.Color;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.etyllica.collision.CollisionDetector;
 import br.com.etyllica.context.Application;
@@ -9,30 +11,23 @@ import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
-import br.com.etyllica.core.graphics.SVGColor;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
-import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.Point2D;
-import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
+import br.com.runaway.trap.Trap;
 import br.com.runaway.ui.LifeBar;
-import br.com.tide.action.player.ActionPlayerListener;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
-import br.com.tide.input.controller.FirstPlayerController;
 import br.com.vite.editor.MapEditor;
 import br.com.vite.export.MapExporter;
-import br.com.vite.map.Map;
 import br.com.vite.tile.Tile;
+import br.com.vite.tile.layer.ImageTileObject;
 
 public class GameApplication extends Application {
 
-	/*private Camera camera1;
-	private Camera camera2;*/
-	
 	//GUI Stuff
 	private LifeBar lifeBar;
 
@@ -42,16 +37,14 @@ public class GameApplication extends Application {
 
 	private Controller secondPlayerController;
 
-	private Layer obstacle;
-
 	private ShadowLayer shadowMap;
 
 	private LightSource torch1;
 
-	private SpikeFloor trap;
-		
+	private List<Trap> traps;
+
 	private CollisionHandler handler;
-		
+
 	public GameApplication(int w, int h) {
 		super(w, h);
 	}
@@ -59,20 +52,8 @@ public class GameApplication extends Application {
 	@Override
 	public void load() {
 
-		//camera1 = new Camera(0, 0, w/2, h);
-		//camera2 = new Camera(w/2, 0, w/2, h);
-		
-		//player = new TopViewPlayer(w/4, h/2, this);
-		//firstPlayerController = new FirstPlayerController(player);
+		loadMap();
 
-
-		try {
-			map = MapExporter.load("map1.json");
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		handler = new CollisionHandler(map.getMap());
 
 		player = new TopViewPlayer(w/4+20, h/2+80, handler);
@@ -81,38 +62,65 @@ public class GameApplication extends Application {
 
 		updateAtFixedRate(30);
 
-		obstacle = new Layer(200,200,100,50);
-		obstacle.setAngle(20);
-
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
 
-		trap = new SpikeFloor(w/2, h/2);
-		
 		lifeBar = new LifeBar();
 
 		loading = 100;
 	}
 
+	private void loadMap() {
+
+		try {
+			map = MapExporter.load("map8.json");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		traps = new ArrayList<Trap>();
+		
+		Tile[][] tiles = map.getTiles();
+
+		for(int j = 0; j < map.getLines(); j++) {
+
+			for(int i = 0; i < map.getColumns(); i++) {
+				
+				ImageTileObject obj = tiles[j][i].getObjectLayer();
+				
+				if(obj != null) {
+					
+					if("SPIKE".equals(obj.getLabel())) {
+						traps.add(new SpikeFloor(i*map.getTileWidth(), j*map.getTileHeight()));
+						tiles[j][i].setObjectLayer(null);
+					}
+				}
+			}
+		}
+	}
+
 	public void timeUpdate(long now) {
 		player.update(now);
 
-		trap.update(now);
+		for(Trap trap : traps) {
+			trap.update(now);
+		}
 
 		int p1x = player.getX()+player.getLayer().getTileW()/2;
 		int p1y = player.getY()+player.getLayer().getTileH()/2;
 
 		torch1.setCoordinates(p1x-torch1.getW()/2, p1y-torch1.getH()/2);
-		
+
 		handler.updateCollision(player);
-		
+
 	}
-	
+
 	@Override
 	public void draw(Graphic g) {
 
 		drawScene(g);
-				
+
 		lifeBar.draw(g, 2, 3);
 
 	}
@@ -120,7 +128,9 @@ public class GameApplication extends Application {
 	private void drawScene(Graphic g) {
 		map.draw(g);
 
-		trap.draw(g);
+		for(Trap trap : traps) {
+			trap.draw(g);	
+		}		
 
 		player.draw(g);
 
@@ -128,12 +138,6 @@ public class GameApplication extends Application {
 		for(Point2D point: CollisionDetector.getBounds(player.getHitbox())) {
 			g.fillCircle(point, 5);
 		}
-		for(Point2D point: CollisionDetector.getBounds(obstacle)) {
-			g.fillCircle(point, 5);
-		}
-
-
-		g.fillRect(obstacle);
 
 		//shadowMap.drawLights(g, torch1);
 	}
@@ -151,7 +155,7 @@ public class GameApplication extends Application {
 
 		return null;
 	}
-		
-	
+
+
 
 }
