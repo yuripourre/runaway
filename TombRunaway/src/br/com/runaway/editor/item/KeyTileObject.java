@@ -2,9 +2,9 @@ package br.com.runaway.editor.item;
 
 import br.com.vite.tile.layer.ImageTileObject;
 
-public class Key extends ImageTileObject {
+public class KeyTileObject extends ImageTileObject {
 
-	public Key() {
+	public KeyTileObject() {
 		super("item/key.png");
 		
 		offsetX = 18;

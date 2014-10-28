@@ -11,11 +11,11 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.input.mouse.MouseButton;
 import br.com.etyllica.layer.ImageLayer;
 
-public class GameOver extends Application implements OnAnimationFinishListener {
+public class Congratulations extends Application {
 
 	private ImageLayer background;	
 	
-	public GameOver(int w, int h) {
+	public Congratulations(int w, int h) {
 		super(w, h);
 	}
 
@@ -24,9 +24,8 @@ public class GameOver extends Application implements OnAnimationFinishListener {
 		
 		background = new ImageLayer("menu/background.png");
 		
-		OpacityAnimation fadeIn = new OpacityAnimation(background, 8000);
+		OpacityAnimation fadeIn = new OpacityAnimation(background, 5000);
 		fadeIn.setInterval(0, 0xff);
-		fadeIn.setListener(this);
 		scene.addAnimation(fadeIn);
 		
 		loading = 100;
@@ -45,11 +44,6 @@ public class GameOver extends Application implements OnAnimationFinishListener {
 		g.setColor(Color.BLACK);
 		g.fillRect(this);
 		background.draw(g);
-	}
-
-	@Override
-	public void onAnimationFinish(long now) {
-		restartGame();
 	}
 	
 	private void restartGame() {

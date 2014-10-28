@@ -9,13 +9,14 @@ import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
-import br.com.runaway.editor.item.Key;
-import br.com.runaway.editor.item.Spike;
+import br.com.runaway.editor.item.KeyTileObject;
+import br.com.runaway.editor.item.SpikeTileObject;
 import br.com.vite.MapApplication;
 import br.com.vite.editor.OrthogonalMapEditor;
 import br.com.vite.export.MapExporter;
 import br.com.vite.map.MapType;
 import br.com.vite.map.selection.OrthogonalFloorSelection;
+import br.com.vite.tile.collision.CollisionType;
 import br.com.vite.tile.layer.ImageTileObject;
 import br.com.vite.tile.set.TileSet;
 
@@ -37,16 +38,16 @@ public class MapEditorApplication extends MapApplication {
 	@Override
 	public void load() {
 
-		final int columns = 48;
-		final int lines = 16;
+		final int columns = 25;
+		final int lines = 18;
 
 		editor = new OrthogonalMapEditor(columns, lines, tileWidth, tileHeight);
-		editor.translateMap(0, 40);
+		editor.translateMap(0, 20);
 
 		loading = 30;
 
-		TileSet egyptianSet = new TileSet(18, 10, tileWidth, tileHeight, MapType.ORTHOGONAL, "tiles/tileset.png");
-		
+		EgyptianTileSet egyptianSet = new EgyptianTileSet();
+				
 		selectionEgyptianMap = new OrthogonalFloorSelection(tileWidth, tileHeight, egyptianSet);
 		selectionEgyptianMap.translateMap(10, tileSetOffsetY);
 		selectionEgyptianMap.setListener(editor);
@@ -64,8 +65,8 @@ public class MapEditorApplication extends MapApplication {
 	
 	private void loadTraps() {
 		
-		traps.add(new Key());
-		traps.add(new Spike());
+		traps.add(new KeyTileObject());
+		traps.add(new SpikeTileObject());
 		
 		editor.setObjectTile(traps.get(0));
 	}

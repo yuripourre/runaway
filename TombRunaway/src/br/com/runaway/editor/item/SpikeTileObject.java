@@ -2,9 +2,9 @@ package br.com.runaway.editor.item;
 
 import br.com.vite.tile.layer.ImageTileObject;
 
-public class Spike extends ImageTileObject {
+public class SpikeTileObject extends ImageTileObject {
 
-	public Spike() {
+	public SpikeTileObject() {
 		super("item/spike.png");
 		
 		offsetX = 16;

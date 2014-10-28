@@ -18,6 +18,7 @@ import br.com.etyllica.linear.Point2D;
 import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.animation.HitAnimation;
 import br.com.runaway.collision.CollisionHandler;
+import br.com.runaway.item.Key;
 import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
@@ -31,6 +32,10 @@ import br.com.vite.tile.Tile;
 import br.com.vite.tile.layer.ImageTileObject;
 
 public class GameApplication extends Application {
+
+	public static final int MAX_LEVEL = 10;
+	
+	public static final String PARAM_LEVEL = "level";
 
 	//GUI Stuff
 	private LifeBar lifeBar;
@@ -48,9 +53,11 @@ public class GameApplication extends Application {
 	private List<Trap> traps;
 
 	private CollisionHandler handler;
-	
+
 	private HitAnimation invincible;
-	
+
+	private Key key;
+
 	public GameApplication(int w, int h) {
 		super(w, h);
 	}
@@ -72,7 +79,7 @@ public class GameApplication extends Application {
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
 
 		invincible = new HitAnimation(player);
-		
+
 		lifeBar = new LifeBar(player);
 
 		loading = 100;
@@ -80,12 +87,17 @@ public class GameApplication extends Application {
 
 	private void loadMap() {
 
+		int level = session.getAsInt(PARAM_LEVEL);
+
 		try {
-			map = MapExporter.load("map8.json");
+			map = MapExporter.load("map"+level+".json");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		/*map.getMap().getDrawer().setDrawCollision(false);
+		map.getMap().getDrawer().setDrawGrid(false);*/
 
 		traps = new ArrayList<Trap>();
 
@@ -103,6 +115,11 @@ public class GameApplication extends Application {
 						traps.add(new SpikeFloor(i*map.getTileWidth(), j*map.getTileHeight()));
 						tiles[j][i].setObjectLayer(null);
 					}
+
+					if("KEY".equals(obj.getLabel())) {
+						key = new Key(i*map.getTileWidth(), j*map.getTileHeight());
+						tiles[j][i].setObjectLayer(null);
+					}
 				}
 			}
 		}
@@ -111,23 +128,21 @@ public class GameApplication extends Application {
 	public void timeUpdate(long now) {
 		player.update(now);
 
+		PointInt2D center = player.getCenter();
+
 		for(Trap trap : traps) {
 			trap.update(now);
 
 			if(trap.isActive() && !player.isInvincibility()) {
-				
-				PointInt2D center = player.getCenter();
-				
+
 				if(trap.colideCirclePoint(center.getX(), center.getY())) {
-					player.loseLife();
-					player.setInvincibility(true);				
-					invincible.startAnimation(now);
-					
-					if(player.getCurrentLife()<0)
-						nextApplication = new GameOver(w, h);
+					trapCollision(now);
 				}
 			}
+		}
 
+		if(key.colideCirclePoint(center.getX(), center.getY())) {
+			nextLevel();
 		}
 
 		int p1x = player.getX()+player.getLayer().getTileW()/2;
@@ -137,6 +152,31 @@ public class GameApplication extends Application {
 
 		handler.updateCollision(player);
 
+	}
+
+	private void trapCollision(long now) {
+		player.loseLife();
+		player.setInvincibility(true);				
+		invincible.startAnimation(now);
+
+		if(player.getCurrentLife()<0)
+			nextApplication = new GameOver(w, h);
+	}
+
+	private void nextLevel() {
+		int level = session.getAsInt(PARAM_LEVEL);
+
+		if(level < MAX_LEVEL) {
+
+			session.put(PARAM_LEVEL, level+1);
+
+			nextApplication = new GameApplication(w, h);
+			
+		} else {
+			nextApplication = new GameApplication(w, h);	
+		}
+		
+		
 	}
 
 	@Override
@@ -152,7 +192,10 @@ public class GameApplication extends Application {
 
 		for(Trap trap : traps) {
 			trap.draw(g);	
-		}		
+		}
+
+		if(key!=null)
+			key.draw(g);
 
 		player.draw(g);
 
