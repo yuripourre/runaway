@@ -2,17 +2,21 @@ package br.com.runaway.editor;
 
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.runaway.editor.item.Key;
+import br.com.runaway.editor.item.Spike;
 import br.com.vite.MapApplication;
 import br.com.vite.editor.OrthogonalMapEditor;
 import br.com.vite.export.MapExporter;
 import br.com.vite.map.MapType;
 import br.com.vite.map.selection.OrthogonalFloorSelection;
+import br.com.vite.tile.layer.ImageTileObject;
 import br.com.vite.tile.set.TileSet;
 
 public class MapEditorApplication extends MapApplication {
@@ -24,8 +28,7 @@ public class MapEditorApplication extends MapApplication {
 
 	private OrthogonalFloorSelection selectionEgyptianMap;
 	
-	//Itens
-	private Key key;
+	private List<ImageTileObject> traps = new ArrayList<ImageTileObject>();
 
 	public MapEditorApplication(int w, int h) {
 		super(w, h);
@@ -50,15 +53,21 @@ public class MapEditorApplication extends MapApplication {
 
 		loading = 70;
 		
-		key = new Key();
-		
-		editor.setObjectTile(key);
-		
+		loadTraps();
+				
 		loading = 80;
 
 		updateAtFixedRate(80);
 
 		loading = 100;
+	}
+	
+	private void loadTraps() {
+		
+		traps.add(new Key());
+		traps.add(new Spike());
+		
+		editor.setObjectTile(traps.get(0));
 	}
 
 	@Override
@@ -91,25 +100,6 @@ public class MapEditorApplication extends MapApplication {
 			handleSaveMap(event);
 		} else {
 			handleLoadMap(event);
-		}
-
-		if(event.isKeyDown(KeyEvent.TSK_2)) {
-
-			try {
-
-				int offsetX = editor.getOffsetX();
-				int offsetY = editor.getOffsetY();
-
-				editor = MapExporter.load("map2.json");
-				selectionEgyptianMap.setListener(editor);
-
-				editor.translateMap(offsetX, offsetY);
-
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 		}
 
 		return GUIEvent.NONE;
@@ -203,24 +193,24 @@ public class MapEditorApplication extends MapApplication {
 			path = "map10.json";
 			toLoad = true;
 		}
-
+		
 		if(toLoad) {
 			
 			try {
-
-				int offsetX = editor.getOffsetX();
-				int offsetY = editor.getOffsetY();
-
-				editor = MapExporter.load(path);
+				
+				editor = MapExporter.reload(editor, path);
+				
 				selectionEgyptianMap.setListener(editor);
-				editor.setObjectTile(key);
-
-				editor.translateMap(offsetX, offsetY);
 
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}		
+		
+		if(event.isKeyDown(KeyEvent.TSK_Z)) {
+			editor.setObjectTile(traps.get(0));
+		} else if(event.isKeyDown(KeyEvent.TSK_X)) {
+			editor.setObjectTile(traps.get(1));
 		}
 	}
 
