@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.etyllica.animation.scripts.OpacityAnimation;
 import br.com.etyllica.collision.CollisionDetector;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
@@ -14,7 +15,10 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
 import br.com.etyllica.linear.Point2D;
+import br.com.etyllica.linear.PointInt2D;
+import br.com.runaway.animation.HitAnimation;
 import br.com.runaway.collision.CollisionHandler;
+import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
@@ -44,7 +48,9 @@ public class GameApplication extends Application {
 	private List<Trap> traps;
 
 	private CollisionHandler handler;
-
+	
+	private HitAnimation invincible;
+	
 	public GameApplication(int w, int h) {
 		super(w, h);
 	}
@@ -56,7 +62,7 @@ public class GameApplication extends Application {
 
 		handler = new CollisionHandler(map.getMap());
 
-		player = new TopViewPlayer(w/4+20, h/2+80, handler);
+		player = new TopViewPlayer(w/4+264, h/2-50, handler);
 
 		secondPlayerController = new EasyController(player);
 
@@ -65,7 +71,9 @@ public class GameApplication extends Application {
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch1 = new LightSource(player.getX(), player.getY(), 120);
 
-		lifeBar = new LifeBar();
+		invincible = new HitAnimation(player);
+		
+		lifeBar = new LifeBar(player);
 
 		loading = 100;
 	}
@@ -80,17 +88,17 @@ public class GameApplication extends Application {
 		}
 
 		traps = new ArrayList<Trap>();
-		
+
 		Tile[][] tiles = map.getTiles();
 
 		for(int j = 0; j < map.getLines(); j++) {
 
 			for(int i = 0; i < map.getColumns(); i++) {
-				
+
 				ImageTileObject obj = tiles[j][i].getObjectLayer();
-				
+
 				if(obj != null) {
-					
+
 					if("SPIKE".equals(obj.getLabel())) {
 						traps.add(new SpikeFloor(i*map.getTileWidth(), j*map.getTileHeight()));
 						tiles[j][i].setObjectLayer(null);
@@ -105,6 +113,21 @@ public class GameApplication extends Application {
 
 		for(Trap trap : traps) {
 			trap.update(now);
+
+			if(trap.isActive() && !player.isInvincibility()) {
+				
+				PointInt2D center = player.getCenter();
+				
+				if(trap.colideCirclePoint(center.getX(), center.getY())) {
+					player.loseLife();
+					player.setInvincibility(true);				
+					invincible.startAnimation(now);
+					
+					if(player.getCurrentLife()<0)
+						nextApplication = new GameOver(w, h);
+				}
+			}
+
 		}
 
 		int p1x = player.getX()+player.getLayer().getTileW()/2;
@@ -121,8 +144,7 @@ public class GameApplication extends Application {
 
 		drawScene(g);
 
-		lifeBar.draw(g, 2, 3);
-
+		lifeBar.draw(g);
 	}
 
 	private void drawScene(Graphic g) {

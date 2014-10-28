@@ -2,6 +2,7 @@ package br.com.runaway.player;
 
 import java.awt.Color;
 
+import br.com.etyllica.animation.listener.OnAnimationFinishListener;
 import br.com.etyllica.core.Drawable;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.graphics.SVGColor;
@@ -11,7 +12,7 @@ import br.com.etyllica.linear.PointInt2D;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
-public class TopViewPlayer extends ActionPlayer implements Drawable {
+public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimationFinishListener {
 
 	private AnimatedLayer layer;
 	
@@ -22,6 +23,12 @@ public class TopViewPlayer extends ActionPlayer implements Drawable {
 	private static final int HITBOX_WIDTH = 28;
 	
 	private Color color = SVGColor.DARK_GOLDENROD;
+	
+	private int currentLife = 3;
+	
+	private int totalLife = 3;
+	
+	private boolean invincibility = false;
 
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
 		super(x, y);
@@ -90,6 +97,26 @@ public class TopViewPlayer extends ActionPlayer implements Drawable {
 	public PointInt2D getCenter() {
 		return center;
 	}
+	
+	public boolean isInvincibility() {
+		return invincibility;
+	}
+
+	public void setInvincibility(boolean invincibility) {
+		this.invincibility = invincibility;
+	}
+	
+	public void loseLife() {
+		currentLife--;
+	}
+	
+	public int getCurrentLife() {
+		return currentLife;
+	}
+
+	public int getTotalLife() {
+		return totalLife;
+	}
 
 	public void setColor(Color color) {
 		this.color = color;
@@ -97,6 +124,11 @@ public class TopViewPlayer extends ActionPlayer implements Drawable {
 	
 	public void resetColor() {
 		this.color = SVGColor.DARK_GOLDENROD;
-	}		
+	}
+
+	@Override
+	public void onAnimationFinish(long now) {
+		setInvincibility(false);
+	}
 	
 }

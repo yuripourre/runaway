@@ -4,22 +4,31 @@ import java.awt.Color;
 
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.graphics.SVGColor;
+import br.com.runaway.player.TopViewPlayer;
 
 public class LifeBar {
-
+			
 	private int offsetX = 40;
 
 	private int offsetY = 50;
+	
+	private TopViewPlayer player;
+	
+	public LifeBar(TopViewPlayer player) {
+		super();
+		
+		this.player = player;
+	}
 
-	public void draw(Graphic g, int currentLife, int totalLifes) {
+	public void draw(Graphic g) {
 
 		int radius = 20;
 		
 		int spacing = 5;
 		
-		for(int i = 0; i < totalLifes; i++) {
+		for(int i = 0; i < player.getTotalLife(); i++) {
 
-			if(i < currentLife) {
+			if(i < player.getCurrentLife()) {
 				g.setColor(SVGColor.CRIMSON);
 				g.fillCircle(offsetX+i*(2*radius+spacing), offsetY, radius);
 			}

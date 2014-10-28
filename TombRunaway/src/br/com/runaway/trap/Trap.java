@@ -14,4 +14,9 @@ public abstract class Trap extends GeometricLayer implements Drawable {
 	protected long activeTime = 0;
 	
 	public abstract void update(long now);
+
+	public boolean isActive() {
+		return active;
+	}
+	
 }
