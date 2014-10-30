@@ -9,6 +9,7 @@ import br.com.etyllica.core.graphics.SVGColor;
 import br.com.etyllica.layer.AnimatedLayer;
 import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.PointInt2D;
+import br.com.runaway.animation.HitAnimation;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
@@ -29,6 +30,8 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	private int totalLife = 3;
 
 	private boolean invincibility = false;
+	
+	private HitAnimation invincible;
 
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
 		super(x, y);
@@ -46,6 +49,8 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 		center = new PointInt2D();
 		//hitbox.centralize(layer);
 		centralizeHitbox();
+		
+		invincible = new HitAnimation(this);
 	}
 
 	public void update(long now) {
@@ -111,8 +116,10 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 		this.invincibility = invincibility;
 	}
 
-	public void loseLife() {
+	public void loseLife(long now) {
 		currentLife--;
+		invincible.startAnimation(now);
+		invincibility = true;
 	}
 
 	public int getCurrentLife() {

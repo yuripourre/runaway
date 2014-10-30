@@ -41,7 +41,7 @@ public class GameApplication extends Application {
 
 	private TopViewPlayer player;
 
-	private Controller secondPlayerController;
+	private Controller controller;
 
 	private ShadowLayer shadowMap;
 
@@ -51,7 +51,7 @@ public class GameApplication extends Application {
 
 	private CollisionHandler handler;
 
-	private HitAnimation invincible;
+	
 
 	private Key key;
 
@@ -63,19 +63,21 @@ public class GameApplication extends Application {
 	public void load() {
 
 		loadMap();
+		
+		loading = 40;
 
 		handler = new CollisionHandler(map.getMap());
 
 		player = new TopViewPlayer(32, 32, handler);
 
-		secondPlayerController = new EasyController(player);
+		controller = new EasyController(player);
 
+		loading = 50;
+		
 		updateAtFixedRate(30);
 
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch = new LightSource(player.getX(), player.getY(), 120);
-
-		invincible = new HitAnimation(player);
 
 		lifeBar = new LifeBar(player);
 
@@ -83,8 +85,11 @@ public class GameApplication extends Application {
 	}
 
 	private void loadMap() {
-
+		
 		int level = session.getAsInt(PARAM_LEVEL);
+		
+		loadingInfo = "Loading map "+level;
+		loading = 1;
 
 		try {
 			map = MapExporter.load("map"+level+".json");
@@ -92,13 +97,17 @@ public class GameApplication extends Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		loading = 10;
 
 		map.disableGridShow();
 		map.disableCollisionShow();
 		map.disableCurrentTileShow();
 		
+		loading = 20;
 		loadObjects(map);
 		
+		loading = 30;		
 	}
 	
 	private void loadObjects(MapEditor map) {
@@ -173,10 +182,8 @@ public class GameApplication extends Application {
 	}
 
 	private void trapCollision(long now) {
-		player.loseLife();
-		player.setInvincibility(true);				
-		invincible.startAnimation(now);
-
+		player.loseLife(now);
+		
 		if(player.getCurrentLife() < 0)
 			nextApplication = new GameOver(w, h);
 	}
@@ -227,7 +234,7 @@ public class GameApplication extends Application {
 	@Override
 	public GUIEvent updateKeyboard(KeyEvent event) {
 
-		secondPlayerController.handleEvent(event);
+		controller.handleEvent(event);
 
 		return null;
 	}

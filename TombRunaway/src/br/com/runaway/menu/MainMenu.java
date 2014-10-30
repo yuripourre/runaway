@@ -20,6 +20,8 @@ public class MainMenu extends Application {
 
 	public MainMenu(int w, int h) {
 		super(w, h);
+		
+		loadApplication = new RunawayLoading(x, y, w, h);
 	}
 
 	public void doOpenGame() {
