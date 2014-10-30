@@ -11,14 +11,12 @@ import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.runaway.editor.item.KeyTileObject;
 import br.com.runaway.editor.item.SpikeTileObject;
+import br.com.runaway.menu.MainMenu;
 import br.com.vite.MapApplication;
 import br.com.vite.editor.OrthogonalMapEditor;
 import br.com.vite.export.MapExporter;
-import br.com.vite.map.MapType;
 import br.com.vite.map.selection.OrthogonalFloorSelection;
-import br.com.vite.tile.collision.CollisionType;
 import br.com.vite.tile.layer.ImageTileObject;
-import br.com.vite.tile.set.TileSet;
 
 public class MapEditorApplication extends MapApplication {
 
@@ -85,6 +83,10 @@ public class MapEditorApplication extends MapApplication {
 	public GUIEvent updateKeyboard(KeyEvent event) {
 		super.updateKeyboard(event);
 
+		if(event.isKeyDown(KeyEvent.TSK_ESC)) {
+			nextApplication = new MainMenu(w, h);
+		}
+		
 		if(event.isKeyDown(KeyEvent.TSK_SHIFT_LEFT)) {
 			shiftLeft = true;
 		} else if(event.isKeyUp(KeyEvent.TSK_SHIFT_LEFT)) {

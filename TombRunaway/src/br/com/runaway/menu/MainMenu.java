@@ -14,7 +14,9 @@ public class MainMenu extends Application {
 
 	private ImageLayer background;
 
-	private ImageLayer title;	
+	private ImageLayer title;
+	
+	private static final int INITIAL_LEVEL = 1;
 
 	public MainMenu(int w, int h) {
 		super(w, h);
@@ -23,7 +25,7 @@ public class MainMenu extends Application {
 	public void doOpenGame() {
 
 		//Always start from first level
-		session.put(GameApplication.PARAM_LEVEL, 2);
+		session.put(GameApplication.PARAM_LEVEL, INITIAL_LEVEL);
 		nextApplication = new GameApplication(w, h);
 	}
 
