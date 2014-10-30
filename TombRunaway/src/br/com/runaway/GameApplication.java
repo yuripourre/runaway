@@ -7,7 +7,6 @@ import java.util.List;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
-import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
@@ -52,8 +51,6 @@ public class GameApplication extends Application {
 
 	private CollisionHandler handler;
 
-	
-
 	private Key key;
 
 	public GameApplication(int w, int h, int currentLevel) {
@@ -77,14 +74,14 @@ public class GameApplication extends Application {
 
 		loading = 50;
 		
-		updateAtFixedRate(30);
-
 		shadowMap = new ShadowLayer(x, y, w, h);
 		torch = new LightSource(player.getX(), player.getY(), 120);
 
 		lifeBar = new LifeBar(player);
 
 		loading = 100;
+		
+		updateAtFixedRate(30);
 	}
 
 	private void loadMap() {
@@ -141,6 +138,7 @@ public class GameApplication extends Application {
 		}
 	}
 
+	@Override
 	public void timeUpdate(long now) {
 		player.update(now);
 
@@ -230,19 +228,11 @@ public class GameApplication extends Application {
 	}
 
 	@Override
-	public GUIEvent updateMouse(PointerEvent event) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public GUIEvent updateKeyboard(KeyEvent event) {
 
 		controller.handleEvent(event);
 
 		return null;
 	}
-
-
-
+	
 }
