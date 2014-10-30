@@ -8,7 +8,7 @@ import br.com.runaway.player.TopViewPlayer;
 
 public class LifeBar {
 			
-	private int offsetX = 40;
+	private int offsetX = 640;
 
 	private int offsetY = 50;
 	
