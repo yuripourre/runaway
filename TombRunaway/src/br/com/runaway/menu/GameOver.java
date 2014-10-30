@@ -22,9 +22,9 @@ public class GameOver extends Application implements OnAnimationFinishListener {
 	@Override
 	public void load() {
 		
-		background = new ImageLayer("menu/background.png");
+		background = new ImageLayer("menu/gameover.png");
 		
-		OpacityAnimation fadeIn = new OpacityAnimation(background, 8000);
+		OpacityAnimation fadeIn = new OpacityAnimation(background, 10000);
 		fadeIn.setInterval(0, 0xff);
 		fadeIn.setListener(this);
 		scene.addAnimation(fadeIn);
