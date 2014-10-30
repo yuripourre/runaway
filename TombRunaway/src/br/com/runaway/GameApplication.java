@@ -12,7 +12,6 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
 import br.com.etyllica.linear.PointInt2D;
-import br.com.runaway.animation.HitAnimation;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
 import br.com.runaway.menu.Congratulations;
@@ -30,6 +29,8 @@ import br.com.vite.tile.layer.ImageTileObject;
 
 public class GameApplication extends Application {
 
+	public int currentLevel = 1;
+	
 	public static final int MAX_LEVEL = 10;
 
 	public static final String PARAM_LEVEL = "level";
@@ -55,8 +56,10 @@ public class GameApplication extends Application {
 
 	private Key key;
 
-	public GameApplication(int w, int h) {
+	public GameApplication(int w, int h, int currentLevel) {
 		super(w, h);
+		
+		this.currentLevel = currentLevel;
 	}
 
 	@Override
@@ -86,9 +89,9 @@ public class GameApplication extends Application {
 
 	private void loadMap() {
 		
-		int level = session.getAsInt(PARAM_LEVEL);
+		int level = currentLevel;
 		
-		loadingInfo = "Loading map "+level;
+		loadingInfo = "Loading Map "+level;
 		loading = 1;
 
 		try {
@@ -189,16 +192,17 @@ public class GameApplication extends Application {
 	}
 
 	private void nextLevel() {
-		int level = session.getAsInt(PARAM_LEVEL);
+
+		int level = currentLevel;
 
 		if(level < MAX_LEVEL) {
 
 			session.put(PARAM_LEVEL, level+1);
 
-			nextApplication = new GameApplication(w, h);
+			nextApplication = new GameApplication(w, h, level+1);
 
 		} else {
-			nextApplication = new Congratulations(w, h);	
+			nextApplication = new Congratulations(w, h);
 		}
 	}
 
