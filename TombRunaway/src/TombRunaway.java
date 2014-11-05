@@ -1,6 +1,7 @@
 
 import br.com.etyllica.EtyllicaFrame;
 import br.com.etyllica.context.Application;
+import br.com.etyllica.util.PathHelper;
 import br.com.runaway.menu.MainMenu;
 
 
@@ -19,8 +20,10 @@ public class TombRunaway extends EtyllicaFrame {
 
 	public Application startApplication() {
 		
-		String s = TombRunaway.class.getResource("").toString();
+		String s = PathHelper.currentDirectory();
 		setPath(s+"../");
+		
+		System.out.println("Path: "+s);
 		
 		return new MainMenu(w, h);
 	}

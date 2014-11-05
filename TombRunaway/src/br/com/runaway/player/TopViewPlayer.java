@@ -34,9 +34,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	private HitAnimation invincible;
 
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
-		super(x, y);
-
-		this.listener = listener;
+		super(x, y, listener);
 
 		this.currentSpeed = 3;
 
