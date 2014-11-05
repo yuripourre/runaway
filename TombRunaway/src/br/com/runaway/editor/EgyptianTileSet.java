@@ -14,7 +14,7 @@ public class EgyptianTileSet extends TileSet {
 
 		//Add Collision to TileSet
 		for(int j=0; j < 10; j++) {
-			for(int i=6; i < 18; i++) {
+			for(int i=10; i < 18; i++) {
 				collision[j][i] = CollisionType.BLOCK;
 			}
 		}
