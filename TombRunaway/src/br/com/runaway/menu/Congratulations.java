@@ -2,7 +2,6 @@ package br.com.runaway.menu;
 
 import java.awt.Color;
 
-import br.com.etyllica.animation.listener.OnAnimationFinishListener;
 import br.com.etyllica.animation.scripts.OpacityAnimation;
 import br.com.etyllica.context.Application;
 import br.com.etyllica.core.event.GUIEvent;
@@ -22,7 +21,7 @@ public class Congratulations extends Application {
 	@Override
 	public void load() {
 		
-		background = new ImageLayer("menu/background.png");
+		background = new ImageLayer("menu/congratulations.png");
 		
 		OpacityAnimation fadeIn = new OpacityAnimation(background, 5000);
 		fadeIn.setInterval(0, 0xff);
