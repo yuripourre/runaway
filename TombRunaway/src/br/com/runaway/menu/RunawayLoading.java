@@ -27,7 +27,7 @@ public class RunawayLoading extends GenericLoadApplication {
 	public RunawayLoading(int x, int y, int w, int h) {
 		super(x, y, w, h);
 		
-		background = new ImageLayer("menu/background.png");
+		background = new ImageLayer("menu/background.jpg");
 
 		title = new ImageLayer(0, 60, "title.png");
 		title.centralizeX(this);

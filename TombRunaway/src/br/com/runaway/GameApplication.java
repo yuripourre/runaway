@@ -88,7 +88,7 @@ public class GameApplication extends Application {
 		
 		int level = currentLevel;
 		
-		loadingInfo = "Loading Map "+level;
+		loadingInfo = "Loading Level "+level;
 		loading = 1;
 
 		try {

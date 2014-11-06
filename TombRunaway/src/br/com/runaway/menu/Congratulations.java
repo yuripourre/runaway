@@ -21,7 +21,7 @@ public class Congratulations extends Application {
 	@Override
 	public void load() {
 		
-		background = new ImageLayer("menu/congratulations.png");
+		background = new ImageLayer("menu/congratulations.jpg");
 		
 		OpacityAnimation fadeIn = new OpacityAnimation(background, 5000);
 		fadeIn.setInterval(0, 0xff);

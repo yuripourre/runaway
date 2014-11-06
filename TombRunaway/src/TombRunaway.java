@@ -23,8 +23,6 @@ public class TombRunaway extends EtyllicaFrame {
 		String s = PathHelper.currentDirectory();
 		setPath(s+"../");
 		
-		System.out.println("Path: "+s);
-		
 		return new MainMenu(w, h);
 	}
 	
