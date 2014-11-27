@@ -21,6 +21,8 @@ import br.com.runaway.trap.Trap;
 import br.com.runaway.ui.LifeBar;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
+import br.com.tide.input.controller.FirstPlayerController;
+import br.com.tide.input.controller.JoystickController;
 import br.com.vite.editor.MapEditor;
 import br.com.vite.export.MapExporter;
 import br.com.vite.tile.Tile;
@@ -42,6 +44,8 @@ public class GameApplication extends Application {
 	private TopViewPlayer player;
 
 	private Controller controller;
+	
+	private Controller joystick;
 
 	private ShadowLayer shadowMap;
 
@@ -71,6 +75,7 @@ public class GameApplication extends Application {
 		player = new TopViewPlayer(32, 32, handler);
 
 		controller = new EasyController(player);
+		joystick = new JoystickController(player);
 
 		loading = 50;
 		
@@ -231,6 +236,8 @@ public class GameApplication extends Application {
 	public GUIEvent updateKeyboard(KeyEvent event) {
 
 		controller.handleEvent(event);
+		
+		joystick.handleEvent(event);
 
 		return null;
 	}
