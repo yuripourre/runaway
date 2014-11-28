@@ -3,4 +3,7 @@ Tomb Runaway
 
 A Top Down Maze Game.
 
-You have to walk in a dark maze and find the key avoiding traps.
+You have to walk in a dark maze and find the key, avoiding spike traps.
+
+![ScreenShot 1](https://github.com/yuripourre/runaway/blob/master/screenshots/screenshot1.png)
+![ScreenShot 2](https://github.com/yuripourre/runaway/blob/master/screenshots/screenshot2.png)
