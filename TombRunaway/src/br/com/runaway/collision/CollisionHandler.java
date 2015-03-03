@@ -1,8 +1,11 @@
 package br.com.runaway.collision;
 
+import java.util.List;
+
 import br.com.etyllica.layer.Layer;
 import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.player.TopViewPlayer;
+import br.com.runaway.trap.Trap;
 import br.com.tide.action.player.ActionPlayerListener;
 import br.com.vite.map.Map;
 import br.com.vite.tile.Tile;
@@ -18,13 +21,13 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 	private PointInt2D lowerRightPoint = new PointInt2D(0, 0);
 
 	private PointInt2D targetTile = new PointInt2D(0, 0);
-
+	
 	public CollisionHandler(Map map) {
 		super();
 		this.map = map;
 	}
 
-	public void updateCollision(TopViewPlayer player) {
+	public void updateCollision(long now, TopViewPlayer player) {
 		if(!handleCollision)
 			return;
 
@@ -44,6 +47,7 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		handleVerticalCollision(player);
 		
 		handleHorizontalCollision(player);
+		
 	}
 	
 	private void handleVerticalCollision(TopViewPlayer player) {
@@ -88,6 +92,24 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 
 		}
 		
+	}
+	
+	public boolean checkTrapCollisions(long now, TopViewPlayer player, List<Trap> traps) {
+
+		PointInt2D center = player.getCenter();
+
+		for(Trap trap : traps) {
+			trap.update(now);
+
+			if(trap.isActive() && !player.isInvincibility()) {
+
+				if(trap.colideCirclePoint(center.getX(), center.getY())) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	private void updateHitPoints(TopViewPlayer player) {
@@ -155,5 +177,5 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 	public void onStopTurnRight(TopViewPlayer player) {
 		// TODO Auto-generated method stub
 	}
-
+	
 }

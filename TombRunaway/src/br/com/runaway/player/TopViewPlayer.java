@@ -13,9 +13,9 @@ import br.com.runaway.animation.HitAnimation;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
-public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimationFinishListener {
+public abstract class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimationFinishListener {
 
-	private AnimatedLayer layer;
+	protected AnimatedLayer bodyLayer;
 
 	private Layer hitbox;
 
@@ -32,17 +32,17 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 	private boolean invincibility = false;
 	
 	private HitAnimation invincible;
-
-	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
+	
+	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener, String bodyPart) {
 		super(x, y, listener);
 
 		this.currentSpeed = 3;
 
-		layer = new AnimatedLayer(x, y, 66, 42, "player/player_walk.png");
-		layer.setAngle(angle);
-		layer.setSpeed(100);
-		layer.setFrames(6);
-
+		bodyLayer = new AnimatedLayer(x, y, 66, 42, bodyPart);
+		bodyLayer.setAngle(angle);
+		bodyLayer.setSpeed(100);
+		bodyLayer.setFrames(6);
+		
 		hitbox = new Layer();
 		center = new PointInt2D();
 		//hitbox.centralize(layer);
@@ -55,22 +55,29 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 		super.update(now);
 
 		if(isWalking()) {
-			layer.animate(now);
-			layer.setCoordinates(x, y);
-
+			bodyLayer.animate(now);
+			updatePosition();
 			centralizeHitbox();
 		}
 
 		if(isTurning()) {
-			layer.setAngle(angle);
+			updateAngle();
 		}
 
 	}
 
+	protected void updateAngle() {
+		bodyLayer.setAngle(angle);
+	}
+
+	protected void updatePosition() {
+		bodyLayer.setCoordinates(x, y);
+	}
+
 	private void centralizeHitbox() {
 
-		int cx = layer.getX()+layer.getTileW()/2;
-		int cy = layer.getY()+layer.getTileH()/2;
+		int cx = bodyLayer.getX()+bodyLayer.getTileW()/2;
+		int cy = bodyLayer.getY()+bodyLayer.getTileH()/2;
 
 		center.setLocation(cx, cy);
 
@@ -86,7 +93,7 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 
 		//drawHitBox(g);
 
-		layer.draw(g);
+		bodyLayer.draw(g);
 	}
 
 	private void drawHitBox(Graphic g) {
@@ -98,10 +105,10 @@ public class TopViewPlayer extends ActionPlayer implements Drawable, OnAnimation
 		g.resetOpacity();
 	}
 
-	public AnimatedLayer getLayer() {
-		return layer;
+	public AnimatedLayer getBodyLayer() {
+		return bodyLayer;
 	}
-
+	
 	public PointInt2D getCenter() {
 		return center;
 	}

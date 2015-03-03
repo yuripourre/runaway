@@ -7,7 +7,8 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.gui.Button;
 import br.com.etyllica.gui.label.TextLabel;
 import br.com.etyllica.layer.ImageLayer;
-import br.com.runaway.GameApplication;
+import br.com.runaway.MazeMode;
+import br.com.runaway.SurvivalMode;
 import br.com.runaway.editor.MapEditorApplication;
 
 public class MainMenu extends Application {
@@ -25,7 +26,11 @@ public class MainMenu extends Application {
 	}
 
 	public void doOpenGame() {
-		nextApplication = new GameApplication(w, h, INITIAL_LEVEL);
+		nextApplication = new MazeMode(w, h, INITIAL_LEVEL);
+	}
+	
+	public void doOpenSurvivalGame() {
+		nextApplication = new SurvivalMode(w, h, INITIAL_LEVEL);
 	}
 
 	public void doOpenEditor() {
@@ -42,15 +47,20 @@ public class MainMenu extends Application {
 
 		int buttonWidth = 200;
 
-		Button playButton = new Button(w/2-buttonWidth/2, 300, buttonWidth, 60);
+		Button playButton = new Button(w/2-buttonWidth/2, 260, buttonWidth, 60);
 		playButton.setLabel(new TextLabel("Novo Jogo"));
 		playButton.addAction(GUIEvent.MOUSE_LEFT_BUTTON_UP, new Action(this,  "doOpenGame"));
+		
+		Button survivalButton = new Button(w/2-buttonWidth/2, 340, buttonWidth, 60);
+		survivalButton.setLabel(new TextLabel("Modo Survival"));
+		survivalButton.addAction(GUIEvent.MOUSE_LEFT_BUTTON_UP, new Action(this,  "doOpenSurvivalGame"));
 
-		Button editorButton = new Button(w/2-buttonWidth/2, 380, buttonWidth, 60);
+		Button editorButton = new Button(w/2-buttonWidth/2, 420, buttonWidth, 60);
 		editorButton.setLabel(new TextLabel("Editor de Mapas"));
 		editorButton.addAction(GUIEvent.MOUSE_LEFT_BUTTON_UP, new Action(this,  "doOpenEditor"));
 
 		add(playButton);
+		add(survivalButton);
 		add(editorButton);
 
 		loading = 100;

@@ -13,13 +13,13 @@ public class HitAnimation {
 	public HitAnimation(TopViewPlayer player) {
 		super();
 		
-		firstAnimation = new OpacityAnimation(player.getLayer(), 500);
+		firstAnimation = new OpacityAnimation(player.getBodyLayer(), 500);
 		firstAnimation.setInterval(0xff, 0);
 		
-		lastAnimation = new OpacityAnimation(player.getLayer(), 500);
+		lastAnimation = new OpacityAnimation(player.getBodyLayer(), 500);
 		lastAnimation.setInterval(0, 0xff);
 		
-		player.getLayer().setOpacity(0xff);
+		player.getBodyLayer().setOpacity(0xff);
 		
 		firstAnimation.setNext(lastAnimation);
 		

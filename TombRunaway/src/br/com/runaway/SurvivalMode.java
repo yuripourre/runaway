@@ -15,20 +15,20 @@ import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
 import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
-import br.com.runaway.player.TopViewPlayer;
+import br.com.runaway.player.Hero;
+import br.com.runaway.player.Monster;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
 import br.com.runaway.ui.LifeBar;
 import br.com.tide.input.controller.Controller;
 import br.com.tide.input.controller.EasyController;
-import br.com.tide.input.controller.FirstPlayerController;
 import br.com.tide.input.controller.JoystickController;
 import br.com.vite.editor.MapEditor;
 import br.com.vite.export.MapExporter;
 import br.com.vite.tile.Tile;
 import br.com.vite.tile.layer.ImageTileObject;
 
-public class GameApplication extends Application {
+public class SurvivalMode extends Application {
 
 	public int currentLevel = 1;
 	
@@ -41,7 +41,8 @@ public class GameApplication extends Application {
 
 	private MapEditor map;
 
-	private TopViewPlayer player;
+	private Hero player;
+	private Monster monster;
 
 	private Controller controller;
 	
@@ -57,7 +58,7 @@ public class GameApplication extends Application {
 
 	private Key key;
 
-	public GameApplication(int w, int h, int currentLevel) {
+	public SurvivalMode(int w, int h, int currentLevel) {
 		super(w, h);
 		
 		this.currentLevel = currentLevel;
@@ -72,7 +73,8 @@ public class GameApplication extends Application {
 
 		handler = new CollisionHandler(map.getMap());
 
-		player = new TopViewPlayer(32, 32, handler);
+		player = new Hero(32, 32, handler);
+		monster = new Monster(320, 32, handler);		
 
 		controller = new EasyController(player);
 		joystick = new JoystickController(player);
@@ -111,7 +113,7 @@ public class GameApplication extends Application {
 		
 		loading = 20;
 		loadObjects(map);
-		
+				
 		loading = 30;		
 	}
 	
@@ -147,44 +149,31 @@ public class GameApplication extends Application {
 	public void timeUpdate(long now) {
 		player.update(now);
 
-		checkTrapCollisions(now);
+		if(handler.checkTrapCollisions(now, player, traps))
+			trapCollision(now);
+		
+		if(checkKeyCollision(now))
+			nextLevel();
 
-		checkKeyCollision(now);
-
-		int p1x = player.getX()+player.getLayer().getTileW()/2;
-		int p1y = player.getY()+player.getLayer().getTileH()/2;
+		int p1x = player.getX()+player.getBodyLayer().getTileW()/2;
+		int p1y = player.getY()+player.getBodyLayer().getTileH()/2;
 
 		torch.setCoordinates(p1x-torch.getW()/2, p1y-torch.getH()/2);
 
-		handler.updateCollision(player);
-
+		handler.updateCollision(now, player);
 	}
 
-	private void checkTrapCollisions(long now) {
-
-		PointInt2D center = player.getCenter();
-
-		for(Trap trap : traps) {
-			trap.update(now);
-
-			if(trap.isActive() && !player.isInvincibility()) {
-
-				if(trap.colideCirclePoint(center.getX(), center.getY())) {
-					trapCollision(now);
-				}
-			}
-		}		
-	}
-
-	private void checkKeyCollision(long now) {
+	private boolean checkKeyCollision(long now) {
 		if(key == null)
-			return;
+			return false;
 
 		PointInt2D center = player.getCenter();
 		
 		if(key.colideCirclePoint(center.getX(), center.getY())) {
-			nextLevel();
+			return true;
 		}
+		
+		return false;
 	}
 
 	private void trapCollision(long now) {
@@ -202,7 +191,7 @@ public class GameApplication extends Application {
 
 			session.put(PARAM_LEVEL, level+1);
 
-			nextApplication = new GameApplication(w, h, level+1);
+			nextApplication = new SurvivalMode(w, h, level+1);
 
 		} else {
 			nextApplication = new Congratulations(w, h);
@@ -228,8 +217,9 @@ public class GameApplication extends Application {
 			key.draw(g);
 
 		player.draw(g);
+		monster.draw(g);
 
-		shadowMap.drawLights(g, torch);
+		//shadowMap.drawLights(g, torch);
 	}
 
 	@Override
