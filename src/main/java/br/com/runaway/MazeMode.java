@@ -4,19 +4,19 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.etyllica.context.Application;
+import br.com.etyllica.core.context.Application;
+import br.com.etyllica.core.context.UpdateIntervalListener;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
-import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
 import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.Hero;
-import br.com.runaway.player.Monster;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
 import br.com.runaway.ui.LifeBar;
@@ -28,7 +28,7 @@ import br.com.vite.export.MapExporter;
 import br.com.vite.tile.Tile;
 import br.com.vite.tile.layer.ImageTileObject;
 
-public class MazeMode extends Application {
+public class MazeMode extends Application implements UpdateIntervalListener {
 
 	public int currentLevel = 1;
 	
@@ -86,7 +86,7 @@ public class MazeMode extends Application {
 
 		loading = 100;
 		
-		updateAtFixedRate(30);
+		updateAtFixedRate(30, this);
 	}
 
 	private void loadMap() {

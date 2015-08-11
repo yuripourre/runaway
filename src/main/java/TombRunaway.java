@@ -1,8 +1,6 @@
 
 import br.com.etyllica.EtyllicaFrame;
-import br.com.etyllica.context.Application;
-import br.com.etyllica.core.loader.JoystickLoader;
-import br.com.etyllica.util.PathHelper;
+import br.com.etyllica.core.context.Application;
 import br.com.runaway.menu.MainMenu;
 
 
@@ -20,12 +18,10 @@ public class TombRunaway extends EtyllicaFrame {
 	}
 
 	public Application startApplication() {
+		initialSetup("../");
 		
-		String s = PathHelper.currentDirectory();
-		setPath(s+"../");
-		
-		JoystickLoader.getInstance().start(1);
-		new Thread(JoystickLoader.getInstance()).start();
+		/*JoystickLoader.getInstance().start(1);
+		new Thread(JoystickLoader.getInstance()).start();*/
 		
 		return new MainMenu(w, h);
 	}

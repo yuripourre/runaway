@@ -4,13 +4,14 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.etyllica.context.Application;
+import br.com.etyllica.core.context.Application;
+import br.com.etyllica.core.context.UpdateIntervalListener;
 import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
-import br.com.etyllica.linear.PointInt2D;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
 import br.com.runaway.menu.Congratulations;
@@ -28,7 +29,7 @@ import br.com.vite.export.MapExporter;
 import br.com.vite.tile.Tile;
 import br.com.vite.tile.layer.ImageTileObject;
 
-public class SurvivalMode extends Application {
+public class SurvivalMode extends Application implements UpdateIntervalListener {
 
 	public int currentLevel = 1;
 	
@@ -88,7 +89,7 @@ public class SurvivalMode extends Application {
 
 		loading = 100;
 		
-		updateAtFixedRate(30);
+		updateAtFixedRate(30, this);
 	}
 
 	private void loadMap() {

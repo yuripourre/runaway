@@ -1,7 +1,7 @@
 package br.com.runaway.animation;
 
-import br.com.etyllica.animation.AnimationHandler;
-import br.com.etyllica.animation.scripts.OpacityAnimation;
+import br.com.etyllica.core.animation.AnimationHandler;
+import br.com.etyllica.core.animation.script.OpacityAnimation;
 import br.com.runaway.player.TopViewPlayer;
 
 public class HitAnimation {
