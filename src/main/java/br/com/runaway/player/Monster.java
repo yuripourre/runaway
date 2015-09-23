@@ -12,10 +12,10 @@ public class Monster extends TopViewPlayer {
 	}
 
 	@Override
-	public void draw(Graphic g) {
-		super.draw(g);
+	public void draw(Graphic g, int x, int y) {
+		super.draw(g, x, y);
 		
-		g.drawShadow(x, y, name);
+		g.drawShadow(this.x+x, this.y+y, name);
 	}
 	
 }

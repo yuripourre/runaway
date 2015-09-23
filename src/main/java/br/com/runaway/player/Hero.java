@@ -16,21 +16,21 @@ public class Hero extends TopViewPlayer {
 	}
 	
 	@Override
-	protected void updateAngle() {
+	public void updateAngle() {
 		super.updateAngle();
 		hair.setAngle(angle);
 	}
 
 	@Override
-	protected void updatePosition() {
+	public void updatePosition() {
 		super.updatePosition();
 		hair.setCoordinates(x, y);
 	}
-	
+		
 	@Override
-	public void draw(Graphic g) {
-		super.draw(g);
-		hair.draw(g);
+	public void draw(Graphic g, int x, int y) {
+		super.draw(g, x, y);
+		hair.draw(g, x, y);
 	}
 
 }

@@ -13,7 +13,7 @@ import br.com.runaway.animation.HitAnimation;
 import br.com.tide.action.player.ActionPlayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
-public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implements Drawable, OnAnimationFinishListener {
+public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implements OnAnimationFinishListener {
 
 	protected AnimatedLayer bodyLayer;
 
@@ -66,16 +66,15 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 
 	}
 
-	protected void updateAngle() {
+	public void updateAngle() {
 		bodyLayer.setAngle(angle);
 	}
 
-	protected void updatePosition() {
+	public void updatePosition() {
 		bodyLayer.setCoordinates(x, y);
 	}
 
-	private void centralizeHitbox() {
-
+	public void centralizeHitbox() {
 		int cx = bodyLayer.getX()+bodyLayer.getTileW()/2;
 		int cy = bodyLayer.getY()+bodyLayer.getTileH()/2;
 
@@ -88,16 +87,14 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 		return hitbox;
 	}
 
-	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphic g, int x, int y) {
 
-		//drawHitBox(g);
+		//drawHitBox(g, x, y);
 
-		bodyLayer.draw(g);
+		bodyLayer.draw(g, x, y);
 	}
 
-	private void drawHitBox(Graphic g) {
-
+	private void drawHitBox(Graphic g, int x, int y) {
 		//Draw HitBox
 		g.setColor(color);
 		g.setAlpha(80);

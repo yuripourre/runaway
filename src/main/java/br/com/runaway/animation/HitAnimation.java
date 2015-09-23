@@ -21,7 +21,7 @@ public class HitAnimation {
 		
 		player.getBodyLayer().setOpacity(0xff);
 		
-		firstAnimation.setNext(lastAnimation);
+		firstAnimation.addNext(lastAnimation);
 		
 		lastAnimation.setListener(player);
 	}
