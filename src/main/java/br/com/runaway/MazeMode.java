@@ -7,7 +7,6 @@ import java.util.List;
 
 import br.com.etyllica.core.context.Application;
 import br.com.etyllica.core.context.UpdateIntervalListener;
-import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
@@ -274,17 +273,13 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 	}
 
 	@Override
-	public GUIEvent updateKeyboard(KeyEvent event) {
+	public void updateKeyboard(KeyEvent event) {
 		controller.handleEvent(event);
 		joystick.handleEvent(event);
-
-		return GUIEvent.NONE;
 	}
 	
-	public GUIEvent updateMouse(PointerEvent event) {
+	public void updateMouse(PointerEvent event) {
 		touchController.updateMouse(event);
-		
-		return GUIEvent.NONE;
 	}
 	
 }

@@ -7,7 +7,6 @@ import java.util.List;
 
 import br.com.etyllica.core.context.Application;
 import br.com.etyllica.core.context.UpdateIntervalListener;
-import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.MouseButton;
 import br.com.etyllica.core.event.PointerEvent;
@@ -239,17 +238,13 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	}
 
 	@Override
-	public GUIEvent updateKeyboard(KeyEvent event) {
-
+	public void updateKeyboard(KeyEvent event) {
 		controller.handleEvent(event);
-
 		joystick.handleEvent(event);
-
-		return null;
 	}
 	
 	@Override
-	public GUIEvent updateMouse(PointerEvent event) {
+	public void updateMouse(PointerEvent event) {
 
 		if(event.isButtonDown(MouseButton.MOUSE_BUTTON_LEFT)) {
 			aim.clear();
@@ -261,8 +256,6 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 				aim.add(tile);
 			}*/
 		}
-
-		return null;
 	}
 
 }

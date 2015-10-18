@@ -59,9 +59,9 @@ public class MainMenu extends Application {
 		editorButton.setLabel(new TextLabel("Editor de Mapas"));
 		editorButton.addAction(GUIEvent.MOUSE_LEFT_BUTTON_UP, new Action(this,  "doOpenEditor"));
 
-		add(playButton);
-		add(survivalButton);
-		add(editorButton);
+		addView(playButton);
+		addView(survivalButton);
+		addView(editorButton);
 
 		loading = 100;
 	}

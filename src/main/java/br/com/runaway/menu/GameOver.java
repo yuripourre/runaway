@@ -5,7 +5,6 @@ import java.awt.Color;
 import br.com.etyllica.core.animation.OnAnimationFinishListener;
 import br.com.etyllica.core.animation.script.OpacityAnimation;
 import br.com.etyllica.core.context.Application;
-import br.com.etyllica.core.event.GUIEvent;
 import br.com.etyllica.core.event.MouseButton;
 import br.com.etyllica.core.event.PointerEvent;
 import br.com.etyllica.core.graphics.Graphic;
@@ -32,12 +31,9 @@ public class GameOver extends Application implements OnAnimationFinishListener {
 		loading = 100;
 	}
 	
-	public GUIEvent updateMouse(PointerEvent event) {
-	
+	public void updateMouse(PointerEvent event) {
 		if(event.isButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
 			restartGame();
-		
-		return null;
 	}
 	
 	@Override
