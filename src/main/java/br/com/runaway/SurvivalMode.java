@@ -20,6 +20,7 @@ import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.Hero;
 import br.com.runaway.player.Monster;
+import br.com.runaway.trap.Explosive;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
 import br.com.runaway.ui.LifeBar;
@@ -65,6 +66,8 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private int oy = 0;
 	
 	private List<Tile> aim = new ArrayList<Tile>();
+	
+	private Tile currentTile;
 
 	public SurvivalMode(int w, int h, int currentLevel) {
 		super(w, h);
@@ -156,6 +159,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	@Override
 	public void timeUpdate(long now) {
 		player.update(now);
+		currentTile = handler.getCurrentTile(player);
 
 		if(handler.checkTrapCollisions(now, player, traps))
 			trapCollision(now);
@@ -196,11 +200,8 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		int level = currentLevel;
 
 		if(level < MAX_LEVEL) {
-
 			session.put(PARAM_LEVEL, level+1);
-
 			nextApplication = new SurvivalMode(w, h, level+1);
-
 		} else {
 			nextApplication = new Congratulations(w, h);
 		}
@@ -217,6 +218,10 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private void drawScene(Graphic g) {
 		map.getMap().draw(g, ox, oy);
 
+		//Draw current tile
+		g.setColor(Color.RED);
+		g.fillRect(currentTile);
+		
 		for(Trap trap : traps) {
 			trap.draw(g, ox, oy);
 		}
@@ -230,9 +235,8 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		//Draw aim
 		for(Tile tile:aim) {
 			g.setColor(Color.BLACK);
-			g.fillRect(tile);	
+			g.fillRect(tile);
 		}
-		
 		
 		//shadowMap.drawLights(g, torch);
 	}
@@ -241,6 +245,10 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	public void updateKeyboard(KeyEvent event) {
 		controller.handleEvent(event);
 		joystick.handleEvent(event);
+		
+		if(event.isAnyKeyDown(KeyEvent.VK_SPACE)) {
+			traps.add(new Explosive(currentTile.getX(), currentTile.getY()));
+		}
 	}
 	
 	@Override

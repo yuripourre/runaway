@@ -284,6 +284,16 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		}
 		return false;
 	}
+	
+	public Tile getCurrentTile(TopViewPlayer player) {
+		int x = player.getCenter().getX()/map.getTileWidth();
+		int y = player.getCenter().getY()/map.getTileHeight();
+		return getCurrentTile(x, y);
+	}
+	
+	public Tile getCurrentTile(int x, int y) {
+		return map.getTiles()[y][x];
+	}
 
 	private Tile visionLine(int x1, int y1, int x2, int y2) {
 		int i;               // loop counter
