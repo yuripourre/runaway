@@ -3,7 +3,6 @@ package br.com.runaway.player;
 import java.awt.Color;
 
 import br.com.etyllica.awt.SVGColor;
-import br.com.etyllica.core.Drawable;
 import br.com.etyllica.core.animation.OnAnimationFinishListener;
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.linear.PointInt2D;
@@ -32,6 +31,8 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 	private boolean invincibility = false;
 	
 	private HitAnimation invincible;
+	
+	private PointInt2D target = new PointInt2D();
 	
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener, String bodyPart) {
 		super(x, y, listener);
@@ -108,6 +109,10 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 	
 	public PointInt2D getCenter() {
 		return center;
+	}
+	
+	public PointInt2D getTarget() {
+		return target;
 	}
 
 	public boolean isInvincibility() {

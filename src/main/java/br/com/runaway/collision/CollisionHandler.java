@@ -20,8 +20,6 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 	private PointInt2D upperLeftPoint = new PointInt2D(0, 0);
 	private PointInt2D lowerRightPoint = new PointInt2D(0, 0);
 
-	private PointInt2D targetTile = new PointInt2D(0, 0);
-
 	public CollisionHandler(Map map) {
 		super();
 		this.map = map;
@@ -35,65 +33,87 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		int cy = player.getCenter().getY()+map.getY();
 
 		updateHitPoints(player);
+		
+		map.getIndex(cx, cy, player.getTarget());
 
-		Tile tile = map.getTile(cx, cy, targetTile);
+		Collision colisionVertical =  handleVerticalCollision(player.getTarget(), player);
+		Collision colisionHorizontal = handleHorizontalCollision(player.getTarget(), player);
+		
+		if(colisionHorizontal != Collision.NONE) {
+			moveCollision(colisionHorizontal, player);
+		}
+		
+		if(colisionVertical != Collision.NONE) {
+			moveCollision(colisionVertical, player);
+		}
 
-		/*if(map.isBlock(tile)) {
-			player.setColor(Color.RED);
-		} else {
-			player.resetColor();
-		}*/
+		boolean collision = colisionHorizontal != Collision.NONE || colisionVertical != Collision.NONE;
+		return collision;
+	}
+	
+	private void moveCollision(Collision collision, TopViewPlayer player) {
+		
+		int cy = player.getCenter().getY();
+		int ydif = cy%map.getTileHeight();
+		
+		int cx = player.getCenter().getX();
+		int xdif = cx%map.getTileWidth();
+		
+		switch (collision) {
+		case UP:
+			player.setY(player.getY() + map.getTileHeight()/2 - ydif);
+			break;
+		case DOWN:
+			player.setY(player.getY() - (ydif - map.getTileHeight()/2));
+			break;
+		case LEFT:
+			player.setX(player.getX() + map.getTileWidth()/2 - xdif);
+			break;
+		case RIGHT:
+			player.setX(player.getX() - (xdif - map.getTileWidth()/2));
+			break;
 
-		boolean colisionVertical =  handleVerticalCollision(player);
-		boolean colisionHorizontal = handleHorizontalCollision(player);
-
-		return colisionHorizontal||colisionVertical;
+		default:
+			break;
+		}
 	}
 
-	private boolean handleVerticalCollision(TopViewPlayer player) {
+	private Collision handleVerticalCollision(PointInt2D targetTile, TopViewPlayer player) {
 
 		int cy = player.getCenter().getY();
-
 		int ydif = cy%map.getTileHeight();
 
 		if(ydif < map.getTileHeight()/2) {
 
 			if(map.isBlock(getUpperTile(targetTile))) {
-				player.setY(player.getY() + map.getTileHeight()/2 - ydif);
-				return true;
+				return Collision.UP;
 			}
 
 		} else if(ydif > map.getTileHeight()/2) {
 
 			if(map.isBlock(getLowerTile(targetTile))) {
-				player.setY(player.getY() - (ydif - map.getTileHeight()/2));
-				return true;
+				return Collision.DOWN;
 			}
 		}
-		return false;
+		return Collision.NONE;
 	}
 
-	private boolean handleHorizontalCollision(TopViewPlayer player) {
+	private Collision handleHorizontalCollision(PointInt2D targetTile, TopViewPlayer player) {
 
 		int cx = player.getCenter().getX();
-
 		int xdif = cx%map.getTileWidth();
 
 		if(xdif < map.getTileWidth()/2) {
-
 			if(map.isBlock(getLeftTile(targetTile))) {
-				player.setX(player.getX() + map.getTileWidth()/2 - xdif);
-				return true;
+				return Collision.LEFT;
 			}
 
 		} else if(xdif > map.getTileWidth()/2) {
-
 			if(map.isBlock(getRightTile(targetTile))) {
-				player.setX(player.getX() - (xdif - map.getTileWidth()/2));
-				return true;
+				return Collision.RIGHT;
 			}
 		}
-		return false;	
+		return Collision.NONE;
 	}
 
 	public boolean checkTrapCollisions(long now, TopViewPlayer player, List<Trap> traps) {
@@ -120,20 +140,28 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		lowerRightPoint.setLocation(hitbox.getX()+hitbox.getW(), hitbox.getY()+hitbox.getH());
 	}
 
-	private Tile getUpperTile(PointInt2D target) {
-		return map.getTile(target.getX()*map.getTileWidth(), (target.getY()-1)*map.getTileHeight());
+	private PointInt2D getUpperTile(PointInt2D target) {
+		PointInt2D out = new PointInt2D();
+		map.getIndex(target.getX()*map.getTileWidth(), (target.getY()-1)*map.getTileHeight(), out);
+		return out;
 	}
 
-	private Tile getLowerTile(PointInt2D target) {
-		return map.getTile(target.getX()*map.getTileWidth(), (target.getY()+1)*map.getTileHeight());
+	private PointInt2D getLowerTile(PointInt2D target) {
+		PointInt2D out = new PointInt2D();
+		map.getIndex(target.getX()*map.getTileWidth(), (target.getY()+1)*map.getTileHeight(), out);
+		return out;
 	}
 
-	private Tile getRightTile(PointInt2D target) {
-		return map.getTile((target.getX()+1)*map.getTileWidth(), target.getY()*map.getTileHeight());
+	private PointInt2D getRightTile(PointInt2D target) {
+		PointInt2D out = new PointInt2D();
+		map.getIndex((target.getX()+1)*map.getTileWidth(), target.getY()*map.getTileHeight(), out);
+		return out;
 	}
 
-	private Tile getLeftTile(PointInt2D target) {
-		return map.getTile((target.getX()-1)*map.getTileWidth(), target.getY()*map.getTileHeight());
+	private PointInt2D getLeftTile(PointInt2D target) {
+		PointInt2D out = new PointInt2D();
+		map.getIndex((target.getX()-1)*map.getTileWidth(), target.getY()*map.getTileHeight(), out);
+		return out;
 	}
 
 	@Override
@@ -284,15 +312,10 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		}
 		return false;
 	}
-	
-	public Tile getCurrentTile(TopViewPlayer player) {
-		int x = player.getCenter().getX()/map.getTileWidth();
-		int y = player.getCenter().getY()/map.getTileHeight();
-		return getCurrentTile(x, y);
-	}
-	
-	public Tile getCurrentTile(int x, int y) {
-		return map.getTiles()[y][x];
+		
+	public PointInt2D getCurrentTile(TopViewPlayer player) {
+		map.getIndex(player.getCenter().getX(), player.getCenter().getY(), player.getTarget());
+		return player.getTarget();
 	}
 
 	private Tile visionLine(int x1, int y1, int x2, int y2) {

@@ -30,7 +30,7 @@ public class MainMenu extends Application {
 	}
 	
 	public void doOpenSurvivalGame() {
-		nextApplication = new SurvivalMode(w, h, INITIAL_LEVEL);
+		nextApplication = new SurvivalMode(w, h, INITIAL_LEVEL+5);
 	}
 
 	public void doOpenEditor() {
