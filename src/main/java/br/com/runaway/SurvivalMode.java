@@ -14,6 +14,7 @@ import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
+import br.com.runaway.ai.MoveHandler;
 import br.com.runaway.collision.CollisionHandler;
 import br.com.runaway.item.Key;
 import br.com.runaway.menu.Congratulations;
@@ -37,7 +38,6 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	public int currentLevel = 1;
 
 	public static final int MAX_LEVEL = 10;
-
 	public static final String PARAM_LEVEL = "level";
 
 	//GUI Stuff
@@ -47,6 +47,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 	private Hero player;
 	private Monster monster;
+	private List<Monster> monsters = new ArrayList<Monster>(3);
 
 	private Controller controller;
 
@@ -59,16 +60,18 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private List<Trap> traps;
 
 	private CollisionHandler handler;
+	private MoveHandler moveHandler;
 
 	private Key key;
 
 	private int ox = 0;
 	private int oy = 0;
-	
-	private List<Tile> aim = new ArrayList<Tile>();
-	
-	private Tile currentTile;
 
+	private List<Tile> aim = new ArrayList<Tile>();
+
+	long delay = 10;
+	long lastUpdate = 0;
+	
 	public SurvivalMode(int w, int h, int currentLevel) {
 		super(w, h);
 
@@ -77,16 +80,25 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 	@Override
 	public void load() {
-
 		loadMap();
 
 		loading = 40;
 
 		handler = new CollisionHandler(map.getMap());
+		moveHandler = new MoveHandler(map.getMap());
 
+		System.out.println("Columns: "+map.getColumns());
+		System.out.println("Lines: "+map.getLines());
+		
 		player = new Hero(32, 32, handler);
-		monster = new Monster(320, 32, handler);		
-
+		monsters = new ArrayList<Monster>();
+		monsters.add(new Monster(232, 32, handler));
+		monsters.add(new Monster(520, 32, handler));
+		monsters.add(new Monster(520, 332, handler));
+		monsters.add(new Monster(520, 432, handler));
+		
+		monster = monsters.get(0);
+		
 		controller = new EasyController(player);
 		joystick = new JoystickController(player);
 
@@ -96,10 +108,10 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		torch = new LightSource(player.getX(), player.getY(), 120);
 
 		lifeBar = new LifeBar(player);
-
+		
 		loading = 100;
 
-		updateAtFixedRate(30, this);
+		//updateAtFixedRate(30, this);
 	}
 
 	private void loadMap() {
@@ -125,7 +137,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		loading = 20;
 		loadObjects(map);
 
-		loading = 30;		
+		loading = 30;	
 	}
 
 	private void loadObjects(MapEditor map) {
@@ -155,11 +167,18 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 			}
 		}
 	}
-
+	
+	public void update(long now) {
+		/*if (lastUpdate + delay < now) {
+			timeUpdate(now);
+			lastUpdate = now;
+		}*/
+	}
+	
 	@Override
-	public void timeUpdate(long now) {
+	public void timeUpdate(long now) {		
+		
 		player.update(now);
-		currentTile = handler.getCurrentTile(player);
 
 		if(handler.checkTrapCollisions(now, player, traps))
 			trapCollision(now);
@@ -167,12 +186,23 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		if(checkKeyCollision(now))
 			nextLevel();
 
-		int p1x = player.getX()+player.getBodyLayer().getTileW()/2;
+		/*int p1x = player.getX()+player.getBodyLayer().getTileW()/2;
 		int p1y = player.getY()+player.getBodyLayer().getTileH()/2;
 
-		torch.setCoordinates(p1x-torch.getW()/2, p1y-torch.getH()/2);
-
+		torch.setCoordinates(p1x-torch.getW()/2, p1y-torch.getH()/2);*/
+		
 		handler.updateCollision(now, player);
+		
+		//Move enemies
+		//List of players
+		for(Monster monster: monsters) {
+			moveHandler.move(now, monster, player);
+			monster.update(now);
+			//handler.updateCollision(now, monster);
+		}
+		
+		//moveHandler.move(now, monster, player);
+		//monster.update(now);
 	}
 
 	private boolean checkKeyCollision(long now) {
@@ -210,6 +240,12 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	@Override
 	public void draw(Graphic g) {
 
+		long now = System.currentTimeMillis();
+		if (lastUpdate + delay < now) {
+			timeUpdate(now);
+			lastUpdate = now;
+		}
+		
 		drawScene(g);
 
 		lifeBar.draw(g);
@@ -218,10 +254,26 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private void drawScene(Graphic g) {
 		map.getMap().draw(g, ox, oy);
 
+		//Draw aim
+		for(Tile tile:aim) {
+			g.setColor(Color.BLACK);
+			g.fillRect(tile);
+		}
+		
 		//Draw current tile
+		/*
 		g.setColor(Color.RED);
 		g.fillRect(currentTile);
-		
+
+		//Draw monster path
+		g.setColor(Color.BLUE);
+		for(PointInt2D path: monster.getPath()) {
+			int w = currentTile.getW();
+			int h = currentTile.getH();
+			//map.getMap().getIndex(path.getX(), path.getY(), pathTile);
+			g.fillRect(path.getX()*w, path.getY()*h, w, h);
+		}*/
+
 		for(Trap trap : traps) {
 			trap.draw(g, ox, oy);
 		}
@@ -230,14 +282,10 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 			key.draw(g, ox, oy);
 
 		player.draw(g, ox, oy);
-		monster.draw(g, ox, oy);
-
-		//Draw aim
-		for(Tile tile:aim) {
-			g.setColor(Color.BLACK);
-			g.fillRect(tile);
+		for(Monster monster: monsters) {
+			monster.draw(g, ox, oy);
 		}
-		
+
 		//shadowMap.drawLights(g, torch);
 	}
 
@@ -245,21 +293,21 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	public void updateKeyboard(KeyEvent event) {
 		controller.handleEvent(event);
 		joystick.handleEvent(event);
-		
+
 		if(event.isAnyKeyDown(KeyEvent.VK_SPACE)) {
-			traps.add(new Explosive(currentTile.getX(), currentTile.getY()));
+			traps.add(new Explosive(player.getCenter().getX(), player.getCenter().getY()));
 		}
 	}
-	
+
 	@Override
 	public void updateMouse(PointerEvent event) {
 
 		if(event.isButtonDown(MouseButton.MOUSE_BUTTON_LEFT)) {
 			aim.clear();
 			handler.checkAim(aim, player, event.getX(), event.getY());
-			
+
 			/*Tile tile = handler.checkAimTarget(player, event.getX(), event.getY());
-			
+
 			if(tile!= null) {
 				aim.add(tile);
 			}*/
