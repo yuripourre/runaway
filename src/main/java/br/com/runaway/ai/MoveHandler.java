@@ -122,6 +122,7 @@ public class MoveHandler {
 		switch(action) {
 		case TURN:
 			//turnAction(monster);
+			//monster.nextAction();
 			break;
 
 		case MOVE:
@@ -133,14 +134,18 @@ public class MoveHandler {
 			monster.setName("ACT");
 			/*monster.setName("ATK");
 			attackAction(monster);*/
+			break;
+		case WAIT:
+			monster.setName("WAIT");
+			waitAction(monster);
+			break;
 		default:
 			break;
 		}
 	}
 	
 	private PointInt2D regenerateMoveActions(Monster monster, PointInt2D target) {
-		map.getIndex(monster.getCenter().getX(), monster.getCenter().getY(), monster.getTarget());
-
+		
 		int mx = monster.getTarget().getX();
 		int my = monster.getTarget().getY();
 
@@ -174,11 +179,10 @@ public class MoveHandler {
 	}
 	
 	private void regenerateActions(Monster monster, Hero target) {
-		map.getIndex(target.getCenter().getX(), target.getCenter().getY(), target.getTarget());
-		
 		PointInt2D lastPoint = regenerateMoveActions(monster, target.getTarget());
 		
-		monster.addAttackAction(lastPoint, target);
+		//monster.addAttackAction(lastPoint, target);
+		monster.addWaitAction(lastPoint);
 	}
 
 	private void attackAction(Monster monster) {
@@ -191,7 +195,6 @@ public class MoveHandler {
 
 		monster.setStartAngle(angle);
 		monster.getBodyLayer().setAngle(angle-90);
-		monster.nextAction();
 
 		//Slow Turn
 		/*int tolerance = 4;
@@ -210,7 +213,7 @@ public class MoveHandler {
 	private void moveAction(Monster monster) {
 		monster.walkForward();
 
-		map.getIndex(monster.getCenter().getX(), monster.getCenter().getY(), monster.getTarget());
+		//map.getIndex(monster.getCenter().getX(), monster.getCenter().getY(), monster.getTarget());
 
 		PointInt2D target = monster.currentAction().getData().point;
 
@@ -221,6 +224,11 @@ public class MoveHandler {
 			monster.stopWalkForward();
 			monster.nextAction();
 		}
+	}
+	
+	private void waitAction(Monster monster) {
+		monster.stopWalkForward();
+		monster.nextAction();
 	}
 
 }

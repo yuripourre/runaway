@@ -29,13 +29,12 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		if(!handleCollision)
 			return false;
 
-		int cx = player.getCenter().getX()+map.getX();
-		int cy = player.getCenter().getY()+map.getY();
-
-		updateHitPoints(player);
+		if(!player.isTargetUpdated()) {
+			map.getIndex(player.getCenter().getX(), player.getCenter().getY(), player.getTarget());	
+		}
 		
-		map.getIndex(cx, cy, player.getTarget());
-
+		updateHitBoxPoints(player);
+				
 		Collision colisionVertical =  handleVerticalCollision(player.getTarget(), player);
 		Collision colisionHorizontal = handleHorizontalCollision(player.getTarget(), player);
 		
@@ -76,6 +75,9 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		default:
 			break;
 		}
+		
+		player.updatePosition();
+		player.centralizeHitbox();
 	}
 
 	private Collision handleVerticalCollision(PointInt2D targetTile, TopViewPlayer player) {
@@ -133,7 +135,7 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		return false;
 	}
 
-	private void updateHitPoints(TopViewPlayer player) {
+	private void updateHitBoxPoints(TopViewPlayer player) {
 		Layer hitbox = player.getHitbox();
 
 		upperLeftPoint.setLocation(hitbox.getX(), hitbox.getY());

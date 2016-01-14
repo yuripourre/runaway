@@ -50,7 +50,6 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private List<Monster> monsters = new ArrayList<Monster>(3);
 
 	private Controller controller;
-
 	private Controller joystick;
 
 	private ShadowLayer shadowMap;
@@ -71,7 +70,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 	long delay = 10;
 	long lastUpdate = 0;
-	
+
 	public SurvivalMode(int w, int h, int currentLevel) {
 		super(w, h);
 
@@ -89,16 +88,16 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 		System.out.println("Columns: "+map.getColumns());
 		System.out.println("Lines: "+map.getLines());
-		
+
 		player = new Hero(32, 32, handler);
 		monsters = new ArrayList<Monster>();
 		monsters.add(new Monster(232, 32, handler));
 		monsters.add(new Monster(520, 32, handler));
 		monsters.add(new Monster(520, 332, handler));
 		monsters.add(new Monster(520, 432, handler));
-		
+
 		monster = monsters.get(0);
-		
+
 		controller = new EasyController(player);
 		joystick = new JoystickController(player);
 
@@ -108,7 +107,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		torch = new LightSource(player.getX(), player.getY(), 120);
 
 		lifeBar = new LifeBar(player);
-		
+
 		loading = 100;
 
 		//updateAtFixedRate(30, this);
@@ -167,18 +166,28 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 			}
 		}
 	}
-	
+
 	public void update(long now) {
 		/*if (lastUpdate + delay < now) {
 			timeUpdate(now);
 			lastUpdate = now;
 		}*/
 	}
-	
+
 	@Override
-	public void timeUpdate(long now) {		
-		
+	public void timeUpdate(long now) {
+		if(loading != 100) {
+			return;
+		}
+
+		handler.updateCollision(now, player);
 		player.update(now);
+
+		for(Monster monster: monsters) {
+			handler.updateCollision(now, monster);
+			monster.update(now);
+			moveHandler.move(now, monster, player);
+		}
 
 		if(handler.checkTrapCollisions(now, player, traps))
 			trapCollision(now);
@@ -190,19 +199,15 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		int p1y = player.getY()+player.getBodyLayer().getTileH()/2;
 
 		torch.setCoordinates(p1x-torch.getW()/2, p1y-torch.getH()/2);*/
-		
-		handler.updateCollision(now, player);
-		
-		//Move enemies
-		//List of players
-		for(Monster monster: monsters) {
-			moveHandler.move(now, monster, player);
-			monster.update(now);
-			//handler.updateCollision(now, monster);
-		}
-		
+
+		//handler.updateCollision(now, player);
+
 		//moveHandler.move(now, monster, player);
 		//monster.update(now);
+		player.setTargetUpdated(false);
+		for(Monster monster: monsters) {
+			monster.setTargetUpdated(false);
+		}
 	}
 
 	private boolean checkKeyCollision(long now) {
@@ -226,7 +231,6 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	}
 
 	private void nextLevel() {
-
 		int level = currentLevel;
 
 		if(level < MAX_LEVEL) {
@@ -245,6 +249,10 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 			timeUpdate(now);
 			lastUpdate = now;
 		}
+
+		if (loading != 100) {
+			return;
+		}
 		
 		drawScene(g);
 
@@ -259,7 +267,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 			g.setColor(Color.BLACK);
 			g.fillRect(tile);
 		}
-		
+
 		//Draw current tile
 		/*
 		g.setColor(Color.RED);

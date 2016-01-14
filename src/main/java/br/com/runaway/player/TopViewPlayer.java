@@ -32,6 +32,7 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 	
 	private HitAnimation invincible;
 	
+	private boolean targetUpdated = false;
 	private PointInt2D target = new PointInt2D();
 	
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener, String bodyPart) {
@@ -47,6 +48,7 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 		hitbox = new Layer();
 		center = new PointInt2D();
 		//hitbox.centralize(layer);
+		updatePosition();
 		centralizeHitbox();
 		
 		invincible = new HitAnimation(this);
@@ -150,4 +152,12 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 		setInvincibility(false);
 	}
 
+	public boolean isTargetUpdated() {
+		return targetUpdated;
+	}
+
+	public void setTargetUpdated(boolean targetUpdated) {
+		this.targetUpdated = targetUpdated;
+	}
+	
 }

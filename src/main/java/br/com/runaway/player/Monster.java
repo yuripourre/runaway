@@ -46,12 +46,20 @@ public class Monster extends TopViewPlayer {
 		actions.add(new PlanningStep<ActionData>(PlanningAction.TURN, data));
 	}
 	
+	private PlanningStep<ActionData> WAIT_ACTION = new PlanningStep<ActionData>(PlanningAction.WAIT, new ActionData());
+	
 	public PlanningStep<ActionData> currentAction() {
+		if(actions.isEmpty()) {
+			WAIT_ACTION.getData().point = target;
+			return WAIT_ACTION;
+		}
 		return actions.get(0);
 	}
 
 	public void nextAction() {
-		actions.remove(currentAction());
+		if(!actions.isEmpty()) {
+			actions.remove(actions.get(0));	
+		}
 	}
 
 	public void addMoveAction(double angle, PointInt2D point) {
@@ -67,6 +75,12 @@ public class Monster extends TopViewPlayer {
 		actions.add(new PlanningStep<ActionData>(PlanningAction.MOVE, data));
 	}
 
+	public void addWaitAction(PointInt2D point) {
+		ActionData data = new ActionData();
+		data.point = point;
+		actions.add(new PlanningStep<ActionData>(PlanningAction.WAIT, data));
+	}
+	
 	public void addAttackAction(PointInt2D point, Hero target) {
 		ActionData data = new ActionData();
 		data.point = point;
