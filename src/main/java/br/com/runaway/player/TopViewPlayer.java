@@ -33,14 +33,16 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 	private HitAnimation invincible;
 	
 	private boolean targetUpdated = false;
-	private PointInt2D target = new PointInt2D();
+	protected PointInt2D target = new PointInt2D();
 	
 	public TopViewPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener, String bodyPart) {
+		this(x,y,66,42,listener, bodyPart);
+	}
+	
+	public TopViewPlayer(int x, int y, int w, int h, ActionPlayerListener<TopViewPlayer> listener, String bodyPart) {
 		super(x, y, listener);
 
-		this.currentSpeed = 3;
-
-		bodyLayer = new AnimatedLayer(x, y, 66, 42, bodyPart);
+		bodyLayer = new AnimatedLayer(x, y, w, h, bodyPart);
 		bodyLayer.setAngle(angle);
 		bodyLayer.setSpeed(100);
 		bodyLayer.setFrames(6);
@@ -130,6 +132,12 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 		invincible.startAnimation(now);
 		invincibility = true;
 	}
+	
+	public void gainLife(long now) {
+		if(currentLife<totalLife) {
+			currentLife++;
+		}
+	}
 
 	public int getCurrentLife() {
 		return currentLife;
@@ -159,5 +167,12 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 	public void setTargetUpdated(boolean targetUpdated) {
 		this.targetUpdated = targetUpdated;
 	}
+	
+	@Override
+	public void setStartAngle(double angle) {
+		super.setStartAngle(angle);
+		bodyLayer.setAngle(angle-90);
+	}
+	
 	
 }

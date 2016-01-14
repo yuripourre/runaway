@@ -4,8 +4,8 @@ import java.util.List;
 
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.util.PointUtils;
+import br.com.runaway.player.PlanningPlayer;
 import br.com.runaway.player.Hero;
-import br.com.runaway.player.Monster;
 import br.com.tide.ai.planning.PlanningAction;
 import br.com.vite.map.Map;
 import br.com.vite.pathfind.AStar;
@@ -101,7 +101,11 @@ public class MoveHandler {
 		System.out.println();
 	}
 
-	public void move(long now, Monster monster, Hero target) {
+	public void move(long now, PlanningPlayer monster, Hero target) {
+		if(monster.isDead()) {
+			return;
+		}
+		
 		if (monster.getLastPath() == 0 || monster.getLastPath() + monster.getActDelay() < now) {
 					
 			/*if(monster.getActions().size() == 0) {
@@ -144,7 +148,7 @@ public class MoveHandler {
 		}
 	}
 	
-	private PointInt2D regenerateMoveActions(Monster monster, PointInt2D target) {
+	private PointInt2D regenerateMoveActions(PlanningPlayer monster, PointInt2D target) {
 		
 		int mx = monster.getTarget().getX();
 		int my = monster.getTarget().getY();
@@ -178,23 +182,23 @@ public class MoveHandler {
 		return lastPoint;
 	}
 	
-	private void regenerateActions(Monster monster, Hero target) {
+	private void regenerateActions(PlanningPlayer monster, Hero target) {
 		PointInt2D lastPoint = regenerateMoveActions(monster, target.getTarget());
 		
 		//monster.addAttackAction(lastPoint, target);
 		monster.addWaitAction(lastPoint);
 	}
 
-	private void attackAction(Monster monster) {
+	private void attackAction(PlanningPlayer monster) {
 		monster.attack();
 	}
 
-	private void turnAction(Monster monster) {
+	private void turnAction(PlanningPlayer monster) {
 		double angle = monster.currentAction().getData().angle+90;
 		angle%=360;
 
 		monster.setStartAngle(angle);
-		monster.getBodyLayer().setAngle(angle-90);
+		//monster.getBodyLayer().setAngle(angle-90);
 
 		//Slow Turn
 		/*int tolerance = 4;
@@ -210,7 +214,7 @@ public class MoveHandler {
 		}*/
 	}
 
-	private void moveAction(Monster monster) {
+	private void moveAction(PlanningPlayer monster) {
 		monster.walkForward();
 
 		//map.getIndex(monster.getCenter().getX(), monster.getCenter().getY(), monster.getTarget());
@@ -226,7 +230,7 @@ public class MoveHandler {
 		}
 	}
 	
-	private void waitAction(Monster monster) {
+	private void waitAction(PlanningPlayer monster) {
 		monster.stopWalkForward();
 		monster.nextAction();
 	}

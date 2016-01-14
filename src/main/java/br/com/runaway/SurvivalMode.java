@@ -16,11 +16,17 @@ import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
 import br.com.runaway.ai.MoveHandler;
 import br.com.runaway.collision.CollisionHandler;
+import br.com.runaway.item.Item;
 import br.com.runaway.item.Key;
+import br.com.runaway.item.MedKit;
 import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
+import br.com.runaway.player.BlueSuitHuman;
+import br.com.runaway.player.PlanningPlayer;
 import br.com.runaway.player.Hero;
-import br.com.runaway.player.Monster;
+import br.com.runaway.player.RedSuitHuman;
+import br.com.runaway.player.Zoombie;
+import br.com.runaway.player.TopViewPlayer;
 import br.com.runaway.trap.Explosive;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
@@ -46,17 +52,18 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	private MapEditor map;
 
 	private Hero player;
-	private Monster monster;
-	private List<Monster> monsters = new ArrayList<Monster>(3);
+	private PlanningPlayer monster;
+	private List<PlanningPlayer> monsters = new ArrayList<PlanningPlayer>(3);
 
 	private Controller controller;
 	private Controller joystick;
 
 	private ShadowLayer shadowMap;
-
 	private LightSource torch;
 
 	private List<Trap> traps;
+	private List<Item> items = new ArrayList<Item>();
+	private List<Item> itemSet = new ArrayList<Item>();
 
 	private CollisionHandler handler;
 	private MoveHandler moveHandler;
@@ -90,13 +97,20 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		System.out.println("Lines: "+map.getLines());
 
 		player = new Hero(32, 32, handler);
-		monsters = new ArrayList<Monster>();
-		monsters.add(new Monster(232, 32, handler));
-		monsters.add(new Monster(520, 32, handler));
-		monsters.add(new Monster(520, 332, handler));
-		monsters.add(new Monster(520, 432, handler));
+		
+		monsters.add(new Zoombie(232, 32, handler));
+		monsters.add(new Zoombie(520, 32, handler));
+		monsters.add(new Zoombie(520, 332, handler));
+		monsters.add(new RedSuitHuman(520, 432, handler));
+		
+		monsters.add(new BlueSuitHuman(660, 332, handler));
+		monsters.add(new RedSuitHuman(600, 432, handler));
+		
+		monsters.add(new Zoombie(660, 500, handler));
 
 		monster = monsters.get(0);
+		
+		items.add(new MedKit(48, 200));
 
 		controller = new EasyController(player);
 		joystick = new JoystickController(player);
@@ -129,7 +143,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 		loading = 10;
 
-		map.disableGridShow();
+		//map.disableGridShow();
 		map.disableCollisionShow();
 		map.disableCurrentTileShow();
 
@@ -183,17 +197,35 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		handler.updateCollision(now, player);
 		player.update(now);
 
-		for(Monster monster: monsters) {
+		for(PlanningPlayer monster: monsters) {
 			handler.updateCollision(now, monster);
 			monster.update(now);
 			moveHandler.move(now, monster, player);
+			
+			if(handler.checkTrapCollisions(now, monster, traps)) {
+				monster.setName("DEAD");
+				monster.die();
+			}
 		}
 
-		if(handler.checkTrapCollisions(now, player, traps))
-			trapCollision(now);
+		if(handler.checkTrapCollisions(now, player, traps)) {
+			trapCollision(now, player);
+		}
+		
+		for(Item item: items) {
+			if(item.colide(player.getCenter().getX(), player.getCenter().getY())) {
+				item.act(player, now);
+				itemSet.add(item);
+			}
+		}
+		
+		for(Item item: itemSet) {
+			items.remove(item);
+		}
 
-		if(checkKeyCollision(now))
+		if(checkKeyCollision(now)) {
 			nextLevel();
+		}
 
 		/*int p1x = player.getX()+player.getBodyLayer().getTileW()/2;
 		int p1y = player.getY()+player.getBodyLayer().getTileH()/2;
@@ -205,7 +237,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		//moveHandler.move(now, monster, player);
 		//monster.update(now);
 		player.setTargetUpdated(false);
-		for(Monster monster: monsters) {
+		for(PlanningPlayer monster: monsters) {
 			monster.setTargetUpdated(false);
 		}
 	}
@@ -216,14 +248,14 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 		PointInt2D center = player.getCenter();
 
-		if(key.colideCirclePoint(center.getX(), center.getY())) {
+		if(key.colide(center.getX(), center.getY())) {
 			return true;
 		}
 
 		return false;
 	}
 
-	private void trapCollision(long now) {
+	private void trapCollision(long now, TopViewPlayer player) {
 		player.loseLife(now);
 
 		if(player.getCurrentLife() < 0)
@@ -285,12 +317,20 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		for(Trap trap : traps) {
 			trap.draw(g, ox, oy);
 		}
+		
+		for(Item item : items) {
+			item.draw(g, ox, oy);
+		}
 
-		if(key!=null)
+		if (key != null) {
 			key.draw(g, ox, oy);
+		}
 
 		player.draw(g, ox, oy);
-		for(Monster monster: monsters) {
+		for(PlanningPlayer monster: monsters) {
+			if(monster.isDead()) {
+				continue;
+			}
 			monster.draw(g, ox, oy);
 		}
 
@@ -303,7 +343,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		joystick.handleEvent(event);
 
 		if(event.isAnyKeyDown(KeyEvent.VK_SPACE)) {
-			traps.add(new Explosive(player.getCenter().getX(), player.getCenter().getY()));
+			traps.add(new Explosive(player));
 		}
 	}
 

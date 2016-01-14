@@ -202,7 +202,7 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 
 		PointInt2D center = player.getCenter();
 		
-		if(key.colideCirclePoint(center.getX(), center.getY())) {
+		if(key.colide(center.getX(), center.getY())) {
 			return true;
 		}
 		

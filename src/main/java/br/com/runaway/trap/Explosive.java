@@ -2,30 +2,32 @@ package br.com.runaway.trap;
 
 import br.com.etyllica.core.graphics.Graphic;
 import br.com.etyllica.layer.ImageLayer;
+import br.com.runaway.player.TopViewPlayer;
 
 public class Explosive extends Trap {
 	
+	private TopViewPlayer owner;
 	private ImageLayer layer;
 	
 	private static final int DELAY = 2200;
 	
-	public Explosive(int x, int y) {
+	public Explosive(TopViewPlayer owner) {
 		super();
-		setBounds(x, y, 32, 32);
 		
-		layer = new ImageLayer(x, y, 32, 38, "traps/bomb.png");
+		this.owner = owner;
+		
+		int x = owner.getCenter().getX();
+		int y = owner.getCenter().getY();
+						
+		int width = 32;
+		setBounds(x-width/2, y-width/2, width, width);
+		
+		layer = new ImageLayer("traps/bomb.png");
+		layer.setBounds(x-width/2, y-width/2, width, width);
 	}
 
 	@Override
 	public void draw(Graphic g, int x, int y) {
-		//if(active) {
-			layer.setYImage(0);
-			layer.setH(38);
-		/*} else {
-			layer.setYImage(38);
-			layer.setH(38);
-		}*/
-		
 		layer.draw(g, x, y);
 	}
 	
@@ -34,11 +36,13 @@ public class Explosive extends Trap {
 			started = true;
 			activeTime = now;
 		}
-		if(now > activeTime + DELAY) {
-			active = !active;
-			activeTime = now;
-			//Explode
+		if(!active) {
+			if(now > activeTime + DELAY) {
+				layer.setYImage(32);
+				active = true;
+			}	
 		}
+		
 	}
 	
 	@Override
@@ -46,4 +50,9 @@ public class Explosive extends Trap {
 		super.offset(x, y);
 		layer.setOffset(x, y);		
 	}
+
+	public TopViewPlayer getOwner() {
+		return owner;
+	}
+	
 }

@@ -10,19 +10,16 @@ import br.com.tide.action.player.ActionPlayerListener;
 import br.com.tide.ai.planning.PlanningAction;
 import br.com.tide.ai.planning.PlanningStep;
 
-public class Monster extends TopViewPlayer {
+public abstract class PlanningPlayer extends TopViewPlayer {
 
-	private long lastPath = 0; 
-	private long actDelay = 500;
-	private PointInt2D target = new PointInt2D();
+	protected long lastPath = 0; 
+	protected long actDelay = 500;
+		
+	protected List<PlanningStep<ActionData>> actions = new ArrayList<PlanningStep<ActionData>>();
+	protected List<PointInt2D> path = new ArrayList<>();
 	
-	private List<PlanningStep<ActionData>> actions = new ArrayList<PlanningStep<ActionData>>();
-	private List<PointInt2D> path = new ArrayList<>();
-	
-	public Monster(int x, int y, ActionPlayerListener<TopViewPlayer> listener) {
-		super(x, y, listener, "monster/zombie_walk.png");
-		turnSpeed = 1;
-		currentSpeed = 2;
+	public PlanningPlayer(int x, int y, ActionPlayerListener<TopViewPlayer> listener, String path) {
+		super(x, y, listener, path);
 	}
 
 	@Override
@@ -107,6 +104,6 @@ public class Monster extends TopViewPlayer {
 	public List<PlanningStep<ActionData>> getActions() {
 		return actions;
 	}
-	
+		
 }
 
