@@ -421,4 +421,9 @@ public class CollisionHandler implements ActionPlayerListener<TopViewPlayer> {
 		return map.isBlock(tile);
 	}
 
+	@Override
+	public void onFinishAttack(ActionPlayer<TopViewPlayer> player) {
+		// TODO Auto-generated method stub
+	}
+
 }

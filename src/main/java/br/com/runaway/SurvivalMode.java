@@ -77,6 +77,8 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 	long delay = 10;
 	long lastUpdate = 0;
+	
+	int bombLimit = 5;
 
 	public SurvivalMode(int w, int h, int currentLevel) {
 		super(w, h);
@@ -196,6 +198,9 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 		handler.updateCollision(now, player);
 		player.update(now);
+		
+		ox = w/2-player.getX();
+		oy = h/2-player.getY();
 
 		for(PlanningPlayer monster: monsters) {
 			handler.updateCollision(now, monster);
@@ -343,8 +348,17 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		joystick.handleEvent(event);
 
 		if(event.isAnyKeyDown(KeyEvent.VK_SPACE)) {
-			traps.add(new Explosive(player));
+			dropBomb();
 		}
+	}
+	
+	private void dropBomb() {
+		if (bombLimit <= 0) {
+			return;
+		}
+		
+		bombLimit--;
+		traps.add(new Explosive(player));
 	}
 
 	@Override

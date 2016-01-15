@@ -47,7 +47,7 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 
 	private Hero player;
 
-	private Controller controller;	
+	private Controller controller;
 	private Controller joystick;
 	private TouchJoystickController<TopViewPlayer> touchController;
 
@@ -61,7 +61,7 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 	private CollisionHandler handler;
 
 	private Key key;
-
+	
 	public MazeMode(int w, int h, int currentLevel) {
 		super(w, h);
 		
