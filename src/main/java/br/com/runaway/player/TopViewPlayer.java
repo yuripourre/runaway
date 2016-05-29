@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import br.com.etyllica.awt.SVGColor;
 import br.com.etyllica.core.animation.OnAnimationFinishListener;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.layer.AnimatedLayer;
 import br.com.etyllica.layer.Layer;
@@ -92,14 +92,14 @@ public abstract class TopViewPlayer extends ActionPlayer<TopViewPlayer> implemen
 		return hitbox;
 	}
 
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 
 		//drawHitBox(g, x, y);
 
 		bodyLayer.draw(g, x, y);
 	}
 
-	private void drawHitBox(Graphic g, int x, int y) {
+	private void drawHitBox(Graphics g, int x, int y) {
 		//Draw HitBox
 		g.setColor(color);
 		g.setAlpha(80);

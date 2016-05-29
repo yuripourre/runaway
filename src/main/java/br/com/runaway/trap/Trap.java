@@ -1,6 +1,6 @@
 package br.com.runaway.trap;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.GeometricLayer;
 
 public abstract class Trap extends GeometricLayer {
@@ -22,7 +22,7 @@ public abstract class Trap extends GeometricLayer {
 		this.setLocation(x, y);
 	}
 
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 		// TODO Auto-generated method stub
 	}
 }

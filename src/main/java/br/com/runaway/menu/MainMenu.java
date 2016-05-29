@@ -3,7 +3,7 @@ package br.com.runaway.menu;
 import br.com.etyllica.core.context.Application;
 import br.com.etyllica.core.event.Action;
 import br.com.etyllica.core.event.GUIEvent;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.gui.Button;
 import br.com.etyllica.gui.label.TextLabel;
 import br.com.etyllica.layer.ImageLayer;
@@ -67,7 +67,7 @@ public class MainMenu extends Application {
 	}
 
 	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 		background.draw(g);
 		title.draw(g);
 	}

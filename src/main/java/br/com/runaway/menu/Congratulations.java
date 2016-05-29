@@ -6,7 +6,7 @@ import br.com.etyllica.core.animation.script.OpacityAnimation;
 import br.com.etyllica.core.context.Application;
 import br.com.etyllica.core.event.MouseButton;
 import br.com.etyllica.core.event.PointerEvent;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.ImageLayer;
 
 public class Congratulations extends Application {
@@ -36,7 +36,7 @@ public class Congratulations extends Application {
 	}
 	
 	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(this);
 		background.draw(g);

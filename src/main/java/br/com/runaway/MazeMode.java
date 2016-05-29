@@ -9,7 +9,7 @@ import br.com.etyllica.core.context.Application;
 import br.com.etyllica.core.context.UpdateIntervalListener;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
@@ -53,6 +53,7 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 
 	private ShadowLayer shadowMap;
 	private LightSource torch;
+	private boolean drawShadow = true;
 	
 	private ImageLayer shadow;
 
@@ -151,7 +152,7 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 
 		Tile[][] tiles = map.getTiles();
 
-		for(int j = 0; j < map.getLines(); j++) {
+		for(int j = 0; j < map.getRows(); j++) {
 
 			for(int i = 0; i < map.getColumns(); i++) {
 
@@ -232,15 +233,15 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 	}
 
 	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 		drawScene(g);
 
 		lifeBar.draw(g);
 		//draw
-		drawTouchJoystick(g);
+		//drawTouchJoystick(g);
 	}
 	
-	public void drawTouchJoystick(Graphic g) {
+	public void drawTouchJoystick(Graphics g) {
 		g.setAlpha(50);
 		g.setColor(Color.WHITE);
 		g.fillOval(touchController.getArea());
@@ -255,25 +256,32 @@ public class MazeMode extends Application implements UpdateIntervalListener {
 		g.resetOpacity();
 	}
 
-	private void drawScene(Graphic g) {
+	private void drawScene(Graphics g) {
 		map.draw(g, ox, oy);
 		
-		for(Trap trap : traps) {
+		for (Trap trap : traps) {
 			trap.draw(g, ox, oy);
 		}
 
-		if(key!=null)
+		if (key != null)
 			key.draw(g, ox, oy);
 
 		player.draw(g, ox, oy);
 
-		//Draw Lights
-		//shadowMap.drawLights(g, torch);
-		shadow.draw(g);
+		if (drawShadow) {
+			//Draw Lights
+			//shadowMap.drawLights(g, torch);
+			shadow.draw(g);
+		}
 	}
 
 	@Override
 	public void updateKeyboard(KeyEvent event) {
+		
+		if(event.isKeyDown(KeyEvent.VK_SPACE)) {
+			drawShadow = !drawShadow;
+		}
+		
 		controller.handleEvent(event);
 		joystick.handleEvent(event);
 	}

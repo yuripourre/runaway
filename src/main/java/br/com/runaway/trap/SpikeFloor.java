@@ -1,8 +1,7 @@
 package br.com.runaway.trap;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.ImageLayer;
-import br.com.vite.editor.MapEditor;
 
 public class SpikeFloor extends Trap {
 	
@@ -18,7 +17,7 @@ public class SpikeFloor extends Trap {
 	}
 
 	@Override
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 		if(active) {
 			layer.setYImage(0);
 			layer.setH(38);

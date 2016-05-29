@@ -3,7 +3,7 @@ package br.com.runaway.ui;
 import java.awt.Color;
 
 import br.com.etyllica.awt.SVGColor;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.runaway.player.TopViewPlayer;
 
 public class LifeBar {
@@ -20,7 +20,7 @@ public class LifeBar {
 		this.player = player;
 	}
 
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 
 		int radius = 20;
 		

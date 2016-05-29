@@ -10,7 +10,7 @@ import br.com.etyllica.core.context.UpdateIntervalListener;
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.MouseButton;
 import br.com.etyllica.core.event.PointerEvent;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.etyllica.effects.light.LightSource;
 import br.com.etyllica.effects.light.ShadowLayer;
@@ -22,11 +22,11 @@ import br.com.runaway.item.MedKit;
 import br.com.runaway.menu.Congratulations;
 import br.com.runaway.menu.GameOver;
 import br.com.runaway.player.BlueSuitHuman;
-import br.com.runaway.player.PlanningPlayer;
 import br.com.runaway.player.Hero;
+import br.com.runaway.player.PlanningPlayer;
 import br.com.runaway.player.RedSuitHuman;
-import br.com.runaway.player.Zoombie;
 import br.com.runaway.player.TopViewPlayer;
+import br.com.runaway.player.Zoombie;
 import br.com.runaway.trap.Explosive;
 import br.com.runaway.trap.SpikeFloor;
 import br.com.runaway.trap.Trap;
@@ -96,7 +96,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		moveHandler = new MoveHandler(map.getMap());
 
 		System.out.println("Columns: "+map.getColumns());
-		System.out.println("Lines: "+map.getLines());
+		System.out.println("Lines: "+map.getRows());
 
 		player = new Hero(32, 32, handler);
 		
@@ -161,7 +161,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 
 		Tile[][] tiles = map.getTiles();
 
-		for(int j = 0; j < map.getLines(); j++) {
+		for(int j = 0; j < map.getRows(); j++) {
 
 			for(int i = 0; i < map.getColumns(); i++) {
 
@@ -279,7 +279,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 	}
 
 	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 
 		long now = System.currentTimeMillis();
 		if (lastUpdate + delay < now) {
@@ -296,7 +296,7 @@ public class SurvivalMode extends Application implements UpdateIntervalListener 
 		lifeBar.draw(g);
 	}
 
-	private void drawScene(Graphic g) {
+	private void drawScene(Graphics g) {
 		map.getMap().draw(g, ox, oy);
 
 		//Draw aim

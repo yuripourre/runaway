@@ -1,6 +1,6 @@
 package br.com.runaway.player;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.ImageLayer;
 import br.com.tide.action.player.ActionPlayerListener;
 
@@ -32,7 +32,7 @@ public class Hero extends PlanningPlayer {
 	}
 			
 	@Override
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 		super.draw(g, x, y);
 		head.setOpacity(bodyLayer.getOpacity());
 		head.draw(g, x, y);

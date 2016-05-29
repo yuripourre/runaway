@@ -7,7 +7,7 @@ import java.util.List;
 
 import br.com.etyllica.core.event.KeyEvent;
 import br.com.etyllica.core.event.PointerEvent;
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.runaway.editor.item.KeyTileObject;
 import br.com.runaway.editor.item.SpikeTileObject;
 import br.com.runaway.menu.MainMenu;
@@ -19,6 +19,8 @@ import br.com.vite.tile.layer.ImageTileObject;
 
 public class MapEditorApplication extends MapApplication {
 
+	private static final String ID_TOMBSET = "tomb"; 
+	
 	final int tileWidth = 32;
 	final int tileHeight = 32;
 
@@ -44,6 +46,7 @@ public class MapEditorApplication extends MapApplication {
 		loading = 30;
 
 		EgyptianTileSet egyptianSet = new EgyptianTileSet();
+		egyptianSet.setId(ID_TOMBSET);
 				
 		selectionEgyptianMap = new OrthogonalFloorSelection(tileWidth, tileHeight, egyptianSet);
 		selectionEgyptianMap.translateMap(10, tileSetOffsetY);
@@ -62,8 +65,8 @@ public class MapEditorApplication extends MapApplication {
 	
 	private void loadTraps() {
 		
-		traps.add(new KeyTileObject());
-		traps.add(new SpikeTileObject());
+		traps.add(new KeyTileObject(ID_TOMBSET));
+		traps.add(new SpikeTileObject(ID_TOMBSET));
 		
 		editor.setObjectTile(traps.get(0));
 	}
@@ -223,7 +226,7 @@ public class MapEditorApplication extends MapApplication {
 	}
 
 	@Override
-	public void draw(Graphic g) {
+	public void draw(Graphics g) {
 		super.draw(g);
 
 		selectionEgyptianMap.draw(g);

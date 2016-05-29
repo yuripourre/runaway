@@ -1,10 +1,10 @@
 
-import br.com.etyllica.EtyllicaFrame;
+import br.com.etyllica.Etyllica;
 import br.com.etyllica.core.context.Application;
 import br.com.runaway.menu.MainMenu;
 
 
-public class TombRunaway extends EtyllicaFrame {
+public class TombRunaway extends Etyllica {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -14,6 +14,7 @@ public class TombRunaway extends EtyllicaFrame {
 	
 	public static void main(String[] args){
 		TombRunaway map = new TombRunaway();
+		map.setTitle("Tomb Game");
 		map.init();
 	}
 

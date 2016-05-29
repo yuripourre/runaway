@@ -1,6 +1,6 @@
 package br.com.runaway.trap;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.ImageLayer;
 import br.com.runaway.player.TopViewPlayer;
 
@@ -27,7 +27,7 @@ public class Explosive extends Trap {
 	}
 
 	@Override
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 		layer.draw(g, x, y);
 	}
 	

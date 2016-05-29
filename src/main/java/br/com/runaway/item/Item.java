@@ -1,6 +1,6 @@
 package br.com.runaway.item;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.layer.ImageLayer;
 import br.com.runaway.player.Hero;
 
@@ -13,7 +13,7 @@ public class Item {
 		layer = new ImageLayer(x, y, path);
 	}
 
-	public void draw(Graphic g, int ox, int oy) {
+	public void draw(Graphics g, int ox, int oy) {
 		layer.draw(g, ox, oy);
 	}
 	

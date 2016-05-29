@@ -1,10 +1,10 @@
 
-import br.com.etyllica.EtyllicaFrame;
+import br.com.etyllica.Etyllica;
 import br.com.etyllica.core.context.Application;
 import br.com.runaway.editor.MapEditorApplication;
 
 
-public class RunawayMapEditor extends EtyllicaFrame {
+public class RunawayMapEditor extends Etyllica {
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,9 +18,7 @@ public class RunawayMapEditor extends EtyllicaFrame {
 	}
 
 	public Application startApplication() {
-		
-		String s = RunawayMapEditor.class.getResource("").toString();
-		setPath(s+"../");
+		initialSetup("../");
 		
 		return new MapEditorApplication(w, h);
 	}

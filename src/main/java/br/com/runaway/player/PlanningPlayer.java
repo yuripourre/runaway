@@ -3,7 +3,7 @@ package br.com.runaway.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.etyllica.core.graphics.Graphic;
+import br.com.etyllica.core.graphics.Graphics;
 import br.com.etyllica.core.linear.PointInt2D;
 import br.com.runaway.ai.ActionData;
 import br.com.tide.action.player.ActionPlayerListener;
@@ -23,7 +23,7 @@ public abstract class PlanningPlayer extends TopViewPlayer {
 	}
 
 	@Override
-	public void draw(Graphic g, int x, int y) {
+	public void draw(Graphics g, int x, int y) {
 		super.draw(g, x, y);
 		g.drawShadow(this.x+x, this.y+y, name);
 	}

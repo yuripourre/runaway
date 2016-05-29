@@ -33,7 +33,7 @@ public class MoveHandler {
 	 * @return List of Points (Empty list if target is unreachable) 
 	 */
 	public List<PointInt2D> path(int si, int sj, int ei, int ej) {
-		return path(map.getColumns(), map.getLines(), si, sj, ei, ej);
+		return path(map.getColumns(), map.getRows(), si, sj, ei, ej);
 	}
 
 	/**
